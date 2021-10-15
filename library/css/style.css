@@ -499,6 +499,135 @@ section {
    Custom CSS
    ========================================================================== */
 
+body {
+  background: #212224;
+}
+
+.page-content-container {
+  max-width: 766px;
+  margin: auto;
+  padding: 6px;
+  background-color: #F0F2F6;
+  border-radius: 11px;
+}
+
+.page-header-nav {
+  display: flex;
+  align-items: center;
+}
+
+.page-header-nav-link {
+  cursor: pointer;
+  display: inline-block;
+  margin: 0px 15px;
+  color: #212224;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.page-header-nav-link:hover {
+  color: #114b65;
+  text-decoration: none;
+}
+
+.page-header-logo__img {
+  height: 130px;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #114b65;
+  padding-bottom: 20px;
+}
+
+.btn-blue {
+  background-color: #114b64;
+  border-color: #114b64;
+  color: #ffffff;
+}
+
+.btn-blue:hover {
+  background-color: #114b64;
+  border-color: #114b64;
+  color: #ffffff;
+}
+
+.bg-blue {
+  background-color: #114b64 !important;
+}
+
+.text-blue {
+  color: #114b64!important;
+}
+
+.footer {
+  background: #0f4b62;
+  padding: 20px;
+}
+
+.footer-copyright-text {
+  color: #ffffff;
+}
+
+.erp-row-wrap {
+  display: flex;
+  align-items: flex-start;
+}
+
+.erp-row__img {
+  margin-right: 30px;
+  width: 80px;
+}
+
+.erp__name {
+  margin-top: 0px;
+}
+
+.erp-row-actions {
+  margin-left: 30px;
+}
+
+.erp-row-info {
+  flex-grow: 1;
+}
+
+.erp-row {
+  padding: 20px 0px;
+}
+
+.accordion-header {
+  margin-top: 0px;
+}
+
+.wristband-action-btn {
+  display: inline-block;
+  margin: 0px 10px;
+  cursor: pointer;
+}
 
 
+#wristband_modal .modal-title-edit{
+  display: none;
+}
 
+#wristband_modal #wristband_update_btn {
+  display: none;
+}
+
+#wristband_modal.edit .modal-title {
+  display: none;
+}
+
+#wristband_modal.edit .modal-title-edit {
+  display: block
+}
+
+#wristband_modal.edit #wristband_add_btn {
+  display: none;
+}
+
+#wristband_modal.edit #wristband_update_btn {
+  display: block;
+}

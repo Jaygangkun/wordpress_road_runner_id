@@ -124,6 +124,12 @@ function primer_scripts_and_styles() {
     // aos stylesheet
     wp_register_style( 'aos-stylesheet', get_stylesheet_directory_uri() . '/library/css/aos.css', array(), '', 'all' );
     
+	// bootstrap dateptimepicker
+    wp_register_script( 'bootstrap-datetimepicker-js', get_stylesheet_directory_uri() . '/library/js/libs/bootstrap-datetimepicker.min.js', array(), '', false );
+
+	// bootstrap dateptimepicker
+    wp_register_style( 'bootstrap-datetimepicker-stylesheet', get_stylesheet_directory_uri() . '/library/css/bootstrap-datetimepicker.min.css', array(), '', 'all' );
+
     // register main stylesheet
     wp_register_style( 'primer-stylesheet', get_stylesheet_directory_uri() . '/library/css/style.css', array(), '', 'all' );
     
@@ -143,6 +149,7 @@ function primer_scripts_and_styles() {
 
     // enqueue styles and scripts
     wp_enqueue_style( 'aos-stylesheet' );
+	// wp_enqueue_style( 'bootstrap-datetimepicker-stylesheet' );
     wp_enqueue_style( 'primer-stylesheet' );
     wp_enqueue_style( 'responsive-stylesheet' );
     wp_enqueue_style( 'primer-ie-only');
@@ -150,6 +157,7 @@ function primer_scripts_and_styles() {
     wp_enqueue_script( 'jquery' );
     wp_enqueue_script( 'primer-modernizr' );
     wp_enqueue_script( 'aos-js' );
+	// wp_enqueue_script( 'bootstrap-datetimepicker-js' );
     wp_enqueue_script( 'primer-js' );
 
   }

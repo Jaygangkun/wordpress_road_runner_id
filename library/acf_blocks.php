@@ -14,7 +14,7 @@ function primer_setup() {
   
 	// Enqueue editor styles.
 	add_editor_style( 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css' );
-	add_editor_style( 'library/css/style.css' );
+	// add_editor_style( 'library/css/style.css' );
 	
 }
 

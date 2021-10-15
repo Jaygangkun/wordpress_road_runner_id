@@ -22,6 +22,8 @@
 	    
 	    <!-- Bootstrap CSS -->
 	    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+		<link href="<?php echo get_stylesheet_directory_uri() . '/library/css/bootstrap-datetimepicker.min.css'?>" rel="stylesheet">
 	    
 	    <!-- Font Awesome -->
 	    <script src="https://kit.fontawesome.com/0fa7312826.js" crossorigin="anonymous"></script>
@@ -43,26 +45,27 @@
 	        </style>
 	    </noscript>
 
+		<script type="text/javascript">
+			var wp_admin_url = '<?php echo admin_url('admin-ajax.php')?>';
+		</script>
 	</head>
 
 	<body <?php body_class(); ?>>
   	
-  	<nav class="navbar navbar-expand-lg navbar-light">
-  		<div class="container">
-        	
-        	<a class="navbar-brand" href="<?php echo home_url(); ?>"><?php bloginfo('name'); ?></a>
-        	
-        	<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-content" aria-controls="navbar-content" aria-expanded="false" aria-label="<?php esc_html_e( 'Toggle Navigation', 'theme-textdomain' ); ?>">
-        		<span class="navbar-toggler-icon"></span>
-        	</button>
-        
-        	<div class="collapse navbar-collapse" id="navbar-content">
-          	
-			<?php primer_main_nav(); ?>
-          	
-        	</div><!-- end #navbar-content -->
-            	
-        </div><!-- end .container -->
-    </nav>
+	<div class="page-content-container">
+		<div class="page-header">
+			<a class="page-header-logo" href="<?php echo home_url(); ?>">
+				<img class="page-header-logo__img" src="<?php echo get_template_directory_uri()?>/library/images/rrid-logo.jpg" alt="Logo Image">
+			</a>
+			<div class="page-header-nav">
+				<a class="page-header-nav-link" href="#">Activate ID</a>
+				<a class="page-header-nav-link" href="#">Purchase</a>
+				<a class="page-header-nav-link" href="#">My Account</a>
+				<a class="page-header-nav-link" href="#">FAQ</a>
+			</div>
+		</div>
+		<div class="page-content">
+
+		
 
     

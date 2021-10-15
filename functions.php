@@ -149,4 +149,151 @@ if( function_exists('acf_add_options_page') ) {
 	
 }
 
+function addWristband() {
+	$user = wp_get_current_user();
+	
+	$resp = array(
+		'success' => false,
+	);
+
+	$sn = isset($_POST['sn']) ? $_POST['sn'] : '';
+	$pin = isset($_POST['pin']) ? $_POST['pin'] : '';
+	$status = isset($_POST['status']) ? $_POST['status'] : '';
+	$date = isset($_POST['date']) ? $_POST['date'] : '';
+
+	$wristband_id = wp_insert_post(array (
+		'post_type' => 'wristband',
+		'post_title' => $sn.'-'.$pin,
+		'post_content' => '',
+		'post_status' => 'private',
+		'author' => $user->ID,
+		'comment_status' => 'closed',   // if you prefer
+		'ping_status' => 'closed',      // if you prefer
+	));
+
+	if ($wristband_id) {
+		add_post_meta($wristband_id, 'sn', $sn);
+		add_post_meta($wristband_id, 'pin', $pin);
+		add_post_meta($wristband_id, 'status', $status);
+		add_post_meta($wristband_id, 'date', $date);
+
+		$resp['success'] = true;
+		ob_start();
+		showWristbands();
+		$wristband_list_html = ob_get_contents();
+		ob_end_clean();
+		$resp['html'] = $wristband_list_html;
+	}
+
+	echo json_encode($resp);
+
+	die();
+}
+add_action('wp_ajax_add_wristband', 'addWristband');
+add_action('wp_ajax_nopriv_add_wristband', 'addWristband');
+
+function updateWristband() {
+	$resp = array(
+		'success' => false
+	);
+
+	$wristband_id = isset($_POST['wristband_id']) ? $_POST['wristband_id'] : '';
+	$sn = isset($_POST['sn']) ? $_POST['sn'] : '';
+	$pin = isset($_POST['pin']) ? $_POST['pin'] : '';
+	$status = isset($_POST['status']) ? $_POST['status'] : '';
+	$date = isset($_POST['date']) ? $_POST['date'] : '';
+
+	if ($wristband_id != '') {
+		wp_update_post(array(
+			'ID' => $_POST['wristband_id'],
+			'post_title' => $sn.'-'.$pin,
+		));
+
+		update_post_meta($wristband_id, 'sn', $sn);
+		update_post_meta($wristband_id, 'pin', $pin);
+		update_post_meta($wristband_id, 'status', $status);
+		update_post_meta($wristband_id, 'date', $date);
+
+		$resp['success'] = true;
+		ob_start();
+		showWristbands();
+		$wristband_list_html = ob_get_contents();
+		ob_end_clean();
+		$resp['html'] = $wristband_list_html;
+	}
+	echo json_encode($resp);
+	die();
+}
+
+add_action('wp_ajax_update_wristband', 'updateWristband');
+add_action('wp_ajax_nopriv_update_wristband', 'updateWristband');
+
+function deleteWristband() {
+	$resp = array(
+		'success' => false
+	);
+
+	$wristband_id = isset($_POST['wristband_id']) ? $_POST['wristband_id'] : '';
+
+	if ($wristband_id != '') {
+		wp_delete_post($wristband_id);
+
+		$resp['success'] = true;
+		ob_start();
+		showWristbands();
+		$wristband_list_html = ob_get_contents();
+		ob_end_clean();
+		$resp['html'] = $wristband_list_html;
+	}
+
+	echo json_encode($resp);
+	die();
+}
+
+add_action('wp_ajax_delete_wristband', 'deleteWristband');
+add_action('wp_ajax_nopriv_delete_wristband', 'deleteWristband');
+
+function showWristbands() {
+	$user = wp_get_current_user();
+	$wristbands = get_posts(array(
+		'post_type' => 'wristband',
+		'numberposts' => -1,
+		'author' => $user->ID,
+		'post_status' => array('private')
+	));
+
+	$wristband_index = 1;
+	foreach($wristbands as $wristband) {
+		?>
+		<tr wristband-id="<?php echo $wristband->ID?>">
+			<td class="td-sn"><?php the_field('sn', $wristband->ID)?></td>
+			<td class="td-pin"><?php the_field('pin', $wristband->ID)?></td>
+			<td class="td-status">
+				<?php
+				$status = get_field('status', $wristband->ID);
+				if ($status == 'active') {
+					echo '<span class="badge bg-blue">Active</span>';
+				}
+				else if ($status == 'inactive') {
+					echo '<span class="badge bg-danger">Inactive</span>';
+				}
+				else if ($status == 'lost') {
+					echo '<span class="badge bg-warning text-dark">Lost</span>';
+				}
+				else if ($status == 'stolen') {
+					echo '<span class="badge bg-warning text-dark">Stolen</span>';
+				}
+				?>
+			</td>
+			<td class="td-date"><?php the_field('date', $wristband->ID)?></td>
+			<td>
+				<a class="wristband-action-btn wristband-edit-btn text-blue">Edit</a>
+				<a class="wristband-action-btn wristband-delete-btn text-danger">Delete</a>
+			</td>
+		</tr>
+		<?php
+	}
+}
+
+
 ?>
