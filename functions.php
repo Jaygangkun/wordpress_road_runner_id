@@ -151,7 +151,7 @@ if( function_exists('acf_add_options_page') ) {
 
 function addWristband() {
 	$user = wp_get_current_user();
-	
+
 	$resp = array(
 		'success' => false,
 	);
@@ -295,5 +295,113 @@ function showWristbands() {
 	}
 }
 
+function logOut() {
+	wp_logout();
+	echo json_encode(array(
+		'logout' => true
+	));
+	die();
+}
+
+add_action('wp_ajax_logout', 'logOut');
+add_action('wp_ajax_nopriv_logout', 'logOut');
+
+function ajax_login_init(){
+
+    // wp_register_script('ajax-login-script', get_template_directory_uri() . '/ajax-login-script.js', array('jquery') ); 
+    // wp_enqueue_script('ajax-login-script');
+
+    // wp_localize_script( 'ajax-login-script', 'ajax_login_object', array( 
+    //     'ajaxurl' => admin_url( 'admin-ajax.php' ),
+    //     'redirecturl' => home_url(),
+    //     'loadingmessage' => __('Sending user info, please wait...')
+    // ));
+
+    // Enable the user with no privileges to run ajax_login() in AJAX
+	add_action( 'wp_ajax_customer_login', 'customerLogin' );
+    add_action( 'wp_ajax_nopriv_customer_login', 'customerLogin' );
+
+	add_action('wp_ajax_responder_login', 'responderLogin');
+	add_action('wp_ajax_nopriv_responder_login', 'responderLogin');
+}
+
+function responderLogin() {
+	check_ajax_referer( 'ajax-login-nonce', 'security' );
+
+	$sn = isset($_POST['sn']) ? $_POST['sn'] : '';
+	$pin = isset($_POST['pin']) ? $_POST['pin'] : '';
+
+	$users = get_users( array( 'role__in' => array( 'subscriber' ) ) );
+	$user_id = null;
+	// Array of WP_User objects.
+	foreach ( $users as $user ) {
+		$wristbands = get_posts(array(
+			'post_type' => 'wristband',
+			'numberposts' => -1,
+			'author' => $user->ID,
+			'post_status' => array('private')
+		));
+		
+		foreach($wristbands as $wristband) {
+			$wristband_sn = get_field('sn', $wristband->ID);
+			$wristband_pin = get_field('pin', $wristband->ID);
+
+			if ($wristband_sn == $sn && $wristband_pin == $pin) {
+				$user_id = $user->ID;
+				break;
+			}
+		}
+	}
+
+	if ($user_id != null) {
+		wp_set_current_user($user_id);
+        wp_set_auth_cookie($user_id);
+        echo json_encode(array(
+			'loggedin' => true, 
+			'message' => __('Login successful, redirecting...')
+		));
+	}
+	else {
+		echo json_encode(array(
+			'loggedin' => false, 
+		));
+	}
+
+	die();
+}
+
+function customerLogin(){
+
+    // First check the nonce, if it fails the function will break
+    check_ajax_referer( 'ajax-login-nonce', 'security' );
+
+    // Nonce is checked, get the POST data and sign user on
+    $info = array();
+    $info['user_login'] = $_POST['username'];
+    $info['user_password'] = $_POST['password'];
+    $info['remember'] = true;
+
+    $user_signon = wp_signon( $info, false );
+    if ( !is_wp_error($user_signon) ){
+        wp_set_current_user($user_signon->ID);
+        wp_set_auth_cookie($user_signon->ID);
+        echo json_encode(array(
+			'loggedin' => true, 
+			'message' => __('Login successful, redirecting...')
+		));
+    }
+	else {
+		echo json_encode(array(
+			'loggedin' => false, 
+		));
+	}
+
+    die();
+}
+
+// Execute the action only if the user isn't logged in
+if (!is_user_logged_in()) {
+    add_action('init', 'ajax_login_init');
+}
 
 ?>

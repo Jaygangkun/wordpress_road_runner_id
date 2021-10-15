@@ -1,3 +1,8 @@
+<?php
+if (is_user_logged_in() && is_front_page()) {
+	wp_redirect(get_permalink(get_page_by_path('account')));
+}
+?>
 <!doctype html>
 
 <!--[if lt IE 7]><html <?php language_attributes(); ?> class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
@@ -47,11 +52,12 @@
 
 		<script type="text/javascript">
 			var wp_admin_url = '<?php echo admin_url('admin-ajax.php')?>';
+			var login_redirecturl = '<?php echo get_permalink(get_page_by_path('account'))?>';
+			var logout_redirecturl = '<?php echo get_home_url()?>';
 		</script>
 	</head>
 
 	<body <?php body_class(); ?>>
-  	
 	<div class="page-content-container">
 		<div class="page-header">
 			<a class="page-header-logo" href="<?php echo home_url(); ?>">
@@ -59,9 +65,22 @@
 			</a>
 			<div class="page-header-nav">
 				<a class="page-header-nav-link" href="#">Activate ID</a>
-				<a class="page-header-nav-link" href="#">Purchase</a>
-				<a class="page-header-nav-link" href="#">My Account</a>
-				<a class="page-header-nav-link" href="#">FAQ</a>
+				<a class="page-header-nav-link" href="https://www.roadrunnerid.com/">Purchase</a>
+				<?php
+				if (is_user_logged_in()) {
+					?>
+					<a class="page-header-nav-link" href="<?php echo get_permalink(get_page_by_path('account'))?>">My Account</a>
+					<?php
+				}
+				?>
+				<a class="page-header-nav-link" href="<?php echo get_permalink(get_page_by_path('faq'))?>">FAQ</a>
+				<?php
+				if (is_user_logged_in()) {
+					?>
+					<a class="page-header-nav-link" href="javascript:void(0)" id="header_nav_logout">Logout</a>
+					<?php
+				}
+				?>
 			</div>
 		</div>
 		<div class="page-content">
