@@ -149,6 +149,8 @@ if( function_exists('acf_add_options_page') ) {
 	
 }
 
+include('constants.php');
+
 function addWristband() {
 	$user = wp_get_current_user();
 
@@ -403,5 +405,137 @@ function customerLogin(){
 if (!is_user_logged_in()) {
     add_action('init', 'ajax_login_init');
 }
+
+$ignore_field_names = ['page_id', 'form_name', 'meta_type', 'list_count', 'list_index', 'form_action', 'action'];
+
+function updateForm() {
+	$resp = [
+		'success' => false
+	];
+	
+	if(isset($_POST['page_id']) && isset($_POST['form_name'])) {
+
+		if(isset($_POST['meta_type']) && $_POST['meta_type'] == 'list') {
+						
+			if(isset($_POST['form_action']) && $_POST['form_action'] == 'delete') {
+				if(isset($_POST['list_index']) && $_POST['list_index'] != '-1') {
+					$list_index = (int)$_POST['list_index'];
+				}
+				
+				if(isset($_POST['list_count'])) {
+					$list_count = (int)$_POST['list_count'];
+				}
+
+				for($index = $list_index; $index < ($list_count - 1 ); $index ++) {
+					// move data
+					$next_index = $index + 1;
+					$field_names = array_keys($_POST);
+					foreach($field_names as $field_name) {
+						if(in_array($field_name, $ignore_field_names)) {
+							continue;
+						}
+			
+						$meta_field_name_src = $_POST['form_name'].'_list_'.$next_index.'_'.$field_name;
+						$meta_data = get_post_meta($_POST['page_id'], $meta_field_name_src);
+						
+						$meta_field_name_des = $_POST['form_name'].'_list_'.$index.'_'.$field_name;
+						update_post_meta($_POST['page_id'], $meta_field_name_des, $meta_data[0]);
+					}	
+				}
+
+				if($list_count >= 0) {
+					update_post_meta($_POST['page_id'], $_POST['form_name'].'_'.'list', $list_count - 1);
+				}
+			}
+			else {
+				if(isset($_POST['list_index']) && $_POST['list_index'] != '-1') {
+					$list_index = (int)$_POST['list_index'];
+					$list_count = null;
+				}
+				else if(isset($_POST['list_count'])) {
+					$list_index = (int)$_POST['list_count'];
+					$list_count = (int)$_POST['list_count'] + 1;
+				}
+
+				$field_names = array_keys($_POST);
+				foreach($field_names as $field_name) {
+					if(in_array($field_name, $ignore_field_names)) {
+						continue;
+					}
+		
+					$meta_field_name = $_POST['form_name'].'_list_'.$list_index.'_'.$field_name;
+					update_post_meta($_POST['page_id'], $meta_field_name, isset($_POST[$field_name]) ? $_POST[$field_name] : '');
+				}
+
+				if($list_count) {
+					update_post_meta($_POST['page_id'], $_POST['form_name'].'_'.'list', $list_count);
+				}
+			}
+
+			if($_POST['form_name'] == 'emergency_contacts') {
+				ob_start();
+				loadEmergencyContacts($_POST['page_id']);
+				$html = ob_get_contents();
+				ob_end_clean();
+				$resp['html'] = $html;
+			}
+			
+		}
+		else {
+			$field_names = array_keys($_POST);
+			foreach($field_names as $field_name) {
+				if(in_array($field_name, $ignore_field_names)) {
+					continue;
+				}
+	
+				$meta_field_name = $_POST['form_name'].'_'.$field_name;
+				update_post_meta($_POST['page_id'], $meta_field_name, isset($_POST[$field_name]) ? $_POST[$field_name] : '');
+			}
+		}
+		
+
+		$resp['success'] = true;
+	}
+	
+	echo json_encode($resp);
+	die();
+}
+
+add_action('wp_ajax_update_form', 'updateForm');
+add_action('wp_ajax_nopriv_update_form', 'updateForm');
+
+function loadEmergencyContacts($post_id) {
+	$index = 0;
+	?>
+	<?php if( have_rows('emergency_contacts_list', $post_id) ): while ( have_rows('emergency_contacts_list', $post_id) ) : the_row(); ?>
+		<tr index="<?php echo $index?>">
+			<td class="td-name">
+				<?php echo get_sub_field('first_name').' '.get_sub_field('middle_name').' '.get_sub_field('last_name')?>
+				<span class="td-first-name" style="display:none"><?php echo get_sub_field('first_name')?></span>
+				<span class="td-middle-name" style="display:none"><?php echo get_sub_field('middle_name')?></span>
+				<span class="td-last-name" style="display:none"><?php echo get_sub_field('last_name')?></span>
+				<span class="td-email" style="display:none"><?php echo get_sub_field('email')?></span>
+			</td>
+			<td class="td-relationship">
+				<?php echo get_sub_field('relationship')?>
+			</td>
+			<td class="td-phone">
+				<?php echo get_sub_field('phone')?>
+			</td>
+			<td>
+				<a class="action-btn emergency-contact-btn emergency-contact-edit-btn text-blue">Edit</a>
+				<a class="action-btn emergency-contact-btn emergency-contact-delete-btn text-danger">Delete</a>
+			</td>
+		</tr>
+		<?php $index++ ?>
+	<?php endwhile; endif;?>
+	<?php
+}
+
+function getPostMetaData($meta, $form_name, $field_name) {
+	$meta_field_name = $form_name.'_'.$field_name;
+	return isset($meta[$meta_field_name]) ? $meta[$meta_field_name][0] : '';
+}
+
 
 ?>

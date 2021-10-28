@@ -26,9 +26,12 @@ if (is_user_logged_in() && is_front_page()) {
 	  	<link rel="pingback" href="<?php bloginfo('pingback_url'); ?>">
 	    
 	    <!-- Bootstrap CSS -->
-	    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+	    <link rel="stylesheet" type="text/css" href="<?php echo get_stylesheet_directory_uri() . '/library/css/bootstrap.min.css'?>">
+		<link rel="stylesheet" type="text/css" href="<?php echo get_stylesheet_directory_uri() . '/library/css/bootstrap-grid.min.css'?>">
+		<link rel="stylesheet" type="text/css" href="<?php echo get_stylesheet_directory_uri() . '/library/css/bootstrap-reboot.min.css'?>">
+		<link rel="stylesheet" type="text/css" href="<?php echo get_stylesheet_directory_uri() . '/library/css/bootstrap-utilities.min.css'?>">
 
-		<link href="<?php echo get_stylesheet_directory_uri() . '/library/css/bootstrap-datetimepicker.min.css'?>" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="<?php echo get_stylesheet_directory_uri() . '/library/css/bootstrap-datetimepicker.min.css'?>">
 	    
 	    <!-- Font Awesome -->
 	    <script src="https://kit.fontawesome.com/0fa7312826.js" crossorigin="anonymous"></script>

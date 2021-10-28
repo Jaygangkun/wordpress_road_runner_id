@@ -504,7 +504,7 @@ body {
 }
 
 .page-content-container {
-  max-width: 766px;
+  max-width: 856px;
   margin: auto;
   padding: 6px;
   background-color: #F0F2F6;
@@ -630,4 +630,68 @@ body {
 
 #wristband_modal.edit #wristband_update_btn {
   display: block;
+}
+
+.profile-sub-page-link.active,
+.profile-sub-page-link:hover {
+  font-weight: bold;
+  color: #114b64 !important;
+}
+
+.profile-sub-page {
+  display: none;
+}
+
+.action-btn {
+  cursor: pointer;
+}
+
+.profile-form-modal .modal-title-add {
+  display: block;
+}
+
+.profile-form-modal .modal-title-edit {
+  display: none;
+}
+
+.profile-form-modal.edit .modal-title-add {
+  display: none;
+}
+
+.profile-form-modal.edit .modal-title-edit {
+  display: block;
+}
+
+.profile-form-modal .btn-save {
+  display: block;
+}
+
+.profile-form-modal .btn-update {
+  display: none;
+}
+
+.profile-form-modal.edit .btn-save {
+  display: none;
+}
+
+.profile-form-modal.edit .btn-update {
+  display: block;
+}
+
+.profile-results-modal .alert-danger {
+  display: none;
+}
+
+.profile-results-modal.fail .alert-danger {
+  display: block;
+}
+
+.profile-results-modal.fail .alert-success {
+  display: none;
+}
+
+.profile-sub-page .nav-link,
+.profile-sub-page .nav-link:hover,
+.profile-sub-page .nav-link:focus {
+  color: #114b64;
 }

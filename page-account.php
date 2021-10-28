@@ -20,7 +20,7 @@ get_header();
             <div class="card-body">
                 <h2 class="card-title">Profile</h2>  
                 <div class="text-end">
-                    <button class="btn btn-blue">Edit Profile</button>
+                    <a class="btn btn-blue" href="<?php echo get_permalink(get_page_by_path('account/profile'))?>">Edit Profile</a>
                 </div>
                 <div class="erp-list mt-3">
                     <div class="erp-row">
