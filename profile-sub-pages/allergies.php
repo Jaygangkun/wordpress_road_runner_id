@@ -16,7 +16,7 @@
         </thead>
         <tbody id="allergies_list">
             <?php
-            loadAllergies($page_id);
+            loadAllergies($user_id);
             ?>        
         </tbody>
     </table>
@@ -117,7 +117,7 @@
 
 <script>
     (function($){
-        var list_count = <?php echo getPostMetaData($page_meta_data, 'allergies', 'list') == '' ? 0 : getPostMetaData($page_meta_data, 'allergies', 'list')?>;
+        var allergies_list_count = <?php echo getUserMetaData($user_meta_data, 'allergies', 'list') == '' ? 0 : getUserMetaData($user_meta_data, 'allergies', 'list')?>;
 
         var allergies_list = $('#allergies_list');
 
@@ -129,9 +129,9 @@
             let formData = new FormData($('#allergies')[0]);
             formData.append('form_name', 'allergies');
             formData.append('meta_type', 'list');
-            formData.append('page_id', <?php echo $page_id?>);
+            formData.append('user_id', <?php echo $user_id?>);
             formData.append('action', 'update_form');
-            formData.append('list_count', list_count);
+            formData.append('list_count', allergies_list_count);
             $.ajax({
                 url: wp_admin_url,
                 type: 'post',
@@ -145,7 +145,7 @@
                         $(modal_allergies_results).modal('toggle');
                         
                         $(allergies_list).html(resp.html);
-                        list_count++;
+                        allergies_list_count++;
                     }
                     else {
                         $(modal_allergies_results).addClass('fail');
@@ -160,7 +160,7 @@
             let formData = new FormData($('#allergies')[0]);
             formData.append('form_name', 'allergies');
             formData.append('meta_type', 'list');
-            formData.append('page_id', <?php echo $page_id?>);
+            formData.append('user_id', <?php echo $user_id?>);
             formData.append('action', 'update_form');
             $.ajax({
                 url: wp_admin_url,
@@ -225,10 +225,10 @@
             let formData = new FormData($('#allergies')[0]);
             formData.append('form_name', 'allergies');
             formData.append('meta_type', 'list');
-            formData.append('page_id', <?php echo $page_id?>);
+            formData.append('user_id', <?php echo $user_id?>);
             formData.append('action', 'update_form');
             formData.append('form_action', 'delete');
-            formData.append('list_count', list_count);
+            formData.append('list_count', allergies_list_count);
             $.ajax({
                 url: wp_admin_url,
                 type: 'post',
@@ -243,7 +243,7 @@
 
                         $(allergies_list).html(resp.html);
 
-                        list_count--;
+                        allergies_list_count--;
                     }
                     else {
                         $(modal_allergies_results).addClass('fail');

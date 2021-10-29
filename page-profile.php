@@ -2,9 +2,9 @@
 <?php 
 get_header();
 
-$page_id = get_the_ID();
-$page_meta_data = get_post_meta($page_id);
-echo json_encode($page_meta_data);
+$user_id = get_current_user_id();
+$user_meta_data = get_user_meta($user_id);
+echo json_encode($user_meta_data);
 ?>
 
 <div class="page-account-content">

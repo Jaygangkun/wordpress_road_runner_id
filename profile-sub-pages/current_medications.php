@@ -15,9 +15,9 @@
 				<th scope="col">Action</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="current_medications_list">
 			<?php
-            loadCurrentMedications($page_id);
+            loadCurrentMedications($user_id);
             ?>        
         </tbody>
     </table>
@@ -64,26 +64,19 @@
 						</div>
 							
 						<div class="mb-3">
-							<label for="type" class="form-label">Type</label>
-							<div class="row">
-								<div class="col-lg-6">
-									<div class="form-check">
-										<input class="form-check-input" type="radio" name="type" value="Prescription">
-										<label class="form-check-label" for="type">
-											Prescription
-										</label>
-									</div>
-								</div>
-								<div class="col-lg-6">
-									<div class="form-check">
-										<input class="form-check-input" type="radio" name="type" value="Over the Counter">
-										<label class="form-check-label" for="type">
-											Over the Counter
-										</label>
-									</div>
-								</div>
-							</div>
+							<label for="unit" class="form-label">Type</label>
+							<select class="form-select" aria-label="" name="type">
+								<option value="">-- Select --</option>
+								<?php
+                                foreach($const_current_medication_types as $type) {
+                                    ?>
+                                    <option value="<?php echo $type?>"><?php echo $type?></option>
+                                    <?php
+                                }
+                            	?>
+							</select>
 						</div>
+						
 						<div class="mb-3">
 							<label for="frequency" class="form-label">Frequency</label>
 							<select class="form-select" aria-label="" name="frequency">
@@ -147,7 +140,7 @@
 </div>
 <script>
     (function($){
-        var list_count = <?php echo getPostMetaData($page_meta_data, 'current_medications', 'list') == '' ? 0 : getPostMetaData($page_meta_data, 'current_medications', 'list') ?>;
+        var current_medications_list_count = <?php echo getUserMetaData($user_meta_data, 'current_medications', 'list') == '' ? 0 : getUserMetaData($user_meta_data, 'current_medications', 'list') ?>;
 
         var current_medications_list = $('#current_medications_list');
 
@@ -159,9 +152,9 @@
             let formData = new FormData($('#current_medications')[0]);
             formData.append('form_name', 'current_medications');
             formData.append('meta_type', 'list');
-            formData.append('page_id', <?php echo $page_id?>);
+            formData.append('user_id', <?php echo $user_id?>);
             formData.append('action', 'update_form');
-            formData.append('list_count', list_count);
+            formData.append('list_count', current_medications_list_count);
             $.ajax({
                 url: wp_admin_url,
                 type: 'post',
@@ -175,7 +168,7 @@
                         $(modal_current_medications_results).modal('toggle');
                         
                         $(current_medications_list).html(resp.html);
-                        list_count++;
+                        current_medications_list_count++;
                     }
                     else {
                         $(modal_current_medications_results).addClass('fail');
@@ -190,7 +183,7 @@
             let formData = new FormData($('#current_medications')[0]);
             formData.append('form_name', 'current_medications');
             formData.append('meta_type', 'list');
-            formData.append('page_id', <?php echo $page_id?>);
+            formData.append('user_id', <?php echo $user_id?>);
             formData.append('action', 'update_form');
             $.ajax({
                 url: wp_admin_url,
@@ -258,10 +251,10 @@
             let formData = new FormData($('#current_medications')[0]);
             formData.append('form_name', 'current_medications');
             formData.append('meta_type', 'list');
-            formData.append('page_id', <?php echo $page_id?>);
+            formData.append('user_id', <?php echo $user_id?>);
             formData.append('action', 'update_form');
             formData.append('form_action', 'delete');
-            formData.append('list_count', list_count);
+            formData.append('list_count', current_medications_list_count);
             $.ajax({
                 url: wp_admin_url,
                 type: 'post',
@@ -276,7 +269,7 @@
 
                         $(current_medications_list).html(resp.html);
 
-                        list_count--;
+                        current_medications_list_count--;
                     }
                     else {
                         $(modal_current_medications_results).addClass('fail');

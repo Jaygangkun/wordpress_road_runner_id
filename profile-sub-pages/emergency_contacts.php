@@ -16,7 +16,7 @@
         </thead>
         <tbody id="emergency_contacts_list">
             <?php
-            loadEmergencyContacts($page_id);
+            loadEmergencyContacts($user_id);
             ?>            
         </tbody>
     </table>
@@ -110,7 +110,7 @@
 
 <script>
     (function($){
-        var list_count = <?php echo getPostMetaData($page_meta_data, 'emergency_contacts', 'list') == '' ? 0 : getPostMetaData($page_meta_data, 'emergency_contacts', 'list') ?>;
+        var emergency_contacts_list_count = <?php echo getUserMetaData($user_meta_data, 'emergency_contacts', 'list') == '' ? 0 : getUserMetaData($user_meta_data, 'emergency_contacts', 'list') ?>;
 
         var emergency_contacts_list = $('#emergency_contacts_list');
 
@@ -122,9 +122,9 @@
             let formData = new FormData($('#emergency_contacts')[0]);
             formData.append('form_name', 'emergency_contacts');
             formData.append('meta_type', 'list');
-            formData.append('page_id', <?php echo $page_id?>);
+            formData.append('user_id', <?php echo $user_id?>);
             formData.append('action', 'update_form');
-            formData.append('list_count', list_count);
+            formData.append('list_count', emergency_contacts_list_count);
             $.ajax({
                 url: wp_admin_url,
                 type: 'post',
@@ -138,7 +138,7 @@
                         $(modal_emergency_contacts_results).modal('toggle');
                         
                         $(emergency_contacts_list).html(resp.html);
-                        list_count++;
+                        emergency_contacts_list_count++;
                     }
                     else {
                         $(modal_emergency_contacts_results).addClass('fail');
@@ -153,7 +153,7 @@
             let formData = new FormData($('#emergency_contacts')[0]);
             formData.append('form_name', 'emergency_contacts');
             formData.append('meta_type', 'list');
-            formData.append('page_id', <?php echo $page_id?>);
+            formData.append('user_id', <?php echo $user_id?>);
             formData.append('action', 'update_form');
             $.ajax({
                 url: wp_admin_url,
@@ -220,10 +220,10 @@
             let formData = new FormData($('#emergency_contacts')[0]);
             formData.append('form_name', 'emergency_contacts');
             formData.append('meta_type', 'list');
-            formData.append('page_id', <?php echo $page_id?>);
+            formData.append('user_id', <?php echo $user_id?>);
             formData.append('action', 'update_form');
             formData.append('form_action', 'delete');
-            formData.append('list_count', list_count);
+            formData.append('list_count', emergency_contacts_list_count);
             $.ajax({
                 url: wp_admin_url,
                 type: 'post',
@@ -238,7 +238,7 @@
 
                         $(emergency_contacts_list).html(resp.html);
 
-                        list_count--;
+                        emergency_contacts_list_count--;
                     }
                     else {
                         $(modal_emergency_contacts_results).addClass('fail');

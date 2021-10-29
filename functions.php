@@ -406,14 +406,14 @@ if (!is_user_logged_in()) {
     add_action('init', 'ajax_login_init');
 }
 
-$ignore_field_names = ['page_id', 'form_name', 'meta_type', 'list_count', 'list_index', 'form_action', 'action'];
+$ignore_field_names = ['user_id', 'form_name', 'meta_type', 'list_count', 'list_index', 'form_action', 'action'];
 
 function updateForm() {
 	$resp = [
 		'success' => false
 	];
 	
-	if(isset($_POST['page_id']) && isset($_POST['form_name'])) {
+	if(isset($_POST['user_id']) && isset($_POST['form_name'])) {
 
 		if(isset($_POST['meta_type']) && $_POST['meta_type'] == 'list') {
 						
@@ -436,15 +436,15 @@ function updateForm() {
 						}
 			
 						$meta_field_name_src = $_POST['form_name'].'_list_'.$next_index.'_'.$field_name;
-						$meta_data = get_post_meta($_POST['page_id'], $meta_field_name_src);
+						$meta_data = get_user_meta($_POST['user_id'], $meta_field_name_src);
 						
 						$meta_field_name_des = $_POST['form_name'].'_list_'.$index.'_'.$field_name;
-						update_post_meta($_POST['page_id'], $meta_field_name_des, $meta_data[0]);
+						update_user_meta($_POST['user_id'], $meta_field_name_des, $meta_data[0]);
 					}	
 				}
 
 				if($list_count >= 0) {
-					update_post_meta($_POST['page_id'], $_POST['form_name'].'_'.'list', $list_count - 1);
+					update_user_meta($_POST['user_id'], $_POST['form_name'].'_'.'list', $list_count - 1);
 				}
 			}
 			else {
@@ -464,27 +464,27 @@ function updateForm() {
 					}
 		
 					$meta_field_name = $_POST['form_name'].'_list_'.$list_index.'_'.$field_name;
-					update_post_meta($_POST['page_id'], $meta_field_name, isset($_POST[$field_name]) ? $_POST[$field_name] : '');
+					update_user_meta($_POST['user_id'], $meta_field_name, isset($_POST[$field_name]) ? $_POST[$field_name] : '');
 				}
 
 				if($list_count) {
-					update_post_meta($_POST['page_id'], $_POST['form_name'].'_'.'list', $list_count);
+					update_user_meta($_POST['user_id'], $_POST['form_name'].'_'.'list', $list_count);
 				}
 			}
 
 			ob_start();
 			if($_POST['form_name'] == 'emergency_contacts') {
-				loadEmergencyContacts($_POST['page_id']);
+				loadEmergencyContacts($_POST['user_id']);
 				$html = ob_get_contents();
 			}
 
 			if($_POST['form_name'] == 'allergies') {
-				loadAllergies($_POST['page_id']);
+				loadAllergies($_POST['user_id']);
 				$html = ob_get_contents();
 			}
 
 			if($_POST['form_name'] == 'current_medications') {
-				loadCurrentMedications($_POST['page_id']);
+				loadCurrentMedications($_POST['user_id']);
 				$html = ob_get_contents();
 			}
 
@@ -500,7 +500,7 @@ function updateForm() {
 				}
 	
 				$meta_field_name = $_POST['form_name'].'_'.$field_name;
-				update_post_meta($_POST['page_id'], $meta_field_name, isset($_POST[$field_name]) ? $_POST[$field_name] : '');
+				update_user_meta($_POST['user_id'], $meta_field_name, isset($_POST[$field_name]) ? $_POST[$field_name] : '');
 			}
 		}
 		
@@ -515,10 +515,10 @@ function updateForm() {
 add_action('wp_ajax_update_form', 'updateForm');
 add_action('wp_ajax_nopriv_update_form', 'updateForm');
 
-function loadEmergencyContacts($post_id) {
+function loadEmergencyContacts($user_id) {
 	$index = 0;
 	?>
-	<?php if( have_rows('emergency_contacts_list', $post_id) ): while ( have_rows('emergency_contacts_list', $post_id) ) : the_row(); ?>
+	<?php if( have_rows('emergency_contacts_list', 'user_'.$user_id) ): while ( have_rows('emergency_contacts_list', 'user_'.$user_id) ) : the_row(); ?>
 		<tr index="<?php echo $index?>">
 			<td class="">
 				<span class="td-name"><?php echo get_sub_field('first_name').' '.get_sub_field('middle_name').' '.get_sub_field('last_name')?></span>
@@ -543,10 +543,10 @@ function loadEmergencyContacts($post_id) {
 	<?php
 }
 
-function loadAllergies($post_id) {
+function loadAllergies($user_id) {
 	$index = 0;
 	?>
-	<?php if( have_rows('allergies_list', $post_id) ): while ( have_rows('allergies_list', $post_id) ) : the_row(); ?>
+	<?php if( have_rows('allergies_list', 'user_'.$user_id) ): while ( have_rows('allergies_list', 'user_'.$user_id) ) : the_row(); ?>
 		<tr index="<?php echo $index?>">
 			<td class="td-type">
 				<?php echo get_sub_field('type')?>
@@ -568,10 +568,10 @@ function loadAllergies($post_id) {
 	<?php
 }
 
-function loadCurrentMedications($post_id) {
+function loadCurrentMedications($user_id) {
 	$index = 0;
 	?>
-	<?php if( have_rows('current_medications_list', $post_id) ): while ( have_rows('current_medications_list', $post_id) ) : the_row(); ?>
+	<?php if( have_rows('current_medications_list', 'user_'.$user_id) ): while ( have_rows('current_medications_list', 'user_'.$user_id) ) : the_row(); ?>
 		<tr index="<?php echo $index?>">
 			<td class="td-name">
 				<?php echo get_sub_field('name')?>
@@ -598,10 +598,8 @@ function loadCurrentMedications($post_id) {
 	<?php
 }
 
-function getPostMetaData($meta, $form_name, $field_name) {
+function getUserMetaData($meta, $form_name, $field_name) {
 	$meta_field_name = $form_name.'_'.$field_name;
 	return isset($meta[$meta_field_name]) ? $meta[$meta_field_name][0] : '';
 }
-
-
 ?>
