@@ -49,10 +49,9 @@
                             <select class="form-select" aria-label="" name="relationship">
                                 <option value="">-- Select --</option>
                                 <?php
-                                $m_relationship = getPostMetaData($page_meta_data, 'emergency_contacts', 'relation_ship');
                                 foreach($const_relationships as $relationship) {
                                     ?>
-                                    <option <?php echo $m_relationship == $relationship ? "selected" : "" ?> value="<?php echo $relationship?>"><?php echo $relationship?></option>
+                                    <option value="<?php echo $relationship?>"><?php echo $relationship?></option>
                                     <?php
                                 }
                                 ?>
@@ -111,7 +110,7 @@
 
 <script>
     (function($){
-        var list_count = <?php echo getPostMetaData($page_meta_data, 'emergency_contacts', 'list')?>;
+        var list_count = <?php echo getPostMetaData($page_meta_data, 'emergency_contacts', 'list') == '' ? 0 : getPostMetaData($page_meta_data, 'emergency_contacts', 'list') ?>;
 
         var emergency_contacts_list = $('#emergency_contacts_list');
 
@@ -188,6 +187,7 @@
             $($modal_emergency_contacts).removeClass('edit');
             $($modal_emergency_contacts).find('input').val('');
             $($modal_emergency_contacts).find('select').val('');
+            $($modal_emergency_contacts).find('textarea').val('');
 
             modal_emergency_contacts.toggle();
         })

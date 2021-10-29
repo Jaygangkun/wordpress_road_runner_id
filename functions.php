@@ -472,13 +472,24 @@ function updateForm() {
 				}
 			}
 
+			ob_start();
 			if($_POST['form_name'] == 'emergency_contacts') {
-				ob_start();
 				loadEmergencyContacts($_POST['page_id']);
 				$html = ob_get_contents();
-				ob_end_clean();
-				$resp['html'] = $html;
 			}
+
+			if($_POST['form_name'] == 'allergies') {
+				loadAllergies($_POST['page_id']);
+				$html = ob_get_contents();
+			}
+
+			if($_POST['form_name'] == 'current_medications') {
+				loadCurrentMedications($_POST['page_id']);
+				$html = ob_get_contents();
+			}
+
+			ob_end_clean();
+			$resp['html'] = $html;
 			
 		}
 		else {
@@ -509,8 +520,8 @@ function loadEmergencyContacts($post_id) {
 	?>
 	<?php if( have_rows('emergency_contacts_list', $post_id) ): while ( have_rows('emergency_contacts_list', $post_id) ) : the_row(); ?>
 		<tr index="<?php echo $index?>">
-			<td class="td-name">
-				<?php echo get_sub_field('first_name').' '.get_sub_field('middle_name').' '.get_sub_field('last_name')?>
+			<td class="">
+				<span class="td-name"><?php echo get_sub_field('first_name').' '.get_sub_field('middle_name').' '.get_sub_field('last_name')?></span>
 				<span class="td-first-name" style="display:none"><?php echo get_sub_field('first_name')?></span>
 				<span class="td-middle-name" style="display:none"><?php echo get_sub_field('middle_name')?></span>
 				<span class="td-last-name" style="display:none"><?php echo get_sub_field('last_name')?></span>
@@ -525,6 +536,61 @@ function loadEmergencyContacts($post_id) {
 			<td>
 				<a class="action-btn emergency-contact-btn emergency-contact-edit-btn text-blue">Edit</a>
 				<a class="action-btn emergency-contact-btn emergency-contact-delete-btn text-danger">Delete</a>
+			</td>
+		</tr>
+		<?php $index++ ?>
+	<?php endwhile; endif;?>
+	<?php
+}
+
+function loadAllergies($post_id) {
+	$index = 0;
+	?>
+	<?php if( have_rows('allergies_list', $post_id) ): while ( have_rows('allergies_list', $post_id) ) : the_row(); ?>
+		<tr index="<?php echo $index?>">
+			<td class="td-type">
+				<?php echo get_sub_field('type')?>
+			</td>
+			<td class="td-allergy">
+				<?php echo get_sub_field('allergy')?>
+			</td>
+			<td class="">
+				<span class="td-severity"><?php echo get_sub_field('severity')?></span>
+				<span class="td-notes" style="display:none"><?php echo get_sub_field('notes')?></span>
+			</td>
+			<td>
+				<a class="action-btn allergy-btn allergy-edit-btn text-blue">Edit</a>
+				<a class="action-btn allergy-btn allergy-delete-btn text-danger">Delete</a>
+			</td>
+		</tr>
+		<?php $index++ ?>
+	<?php endwhile; endif;?>
+	<?php
+}
+
+function loadCurrentMedications($post_id) {
+	$index = 0;
+	?>
+	<?php if( have_rows('current_medications_list', $post_id) ): while ( have_rows('current_medications_list', $post_id) ) : the_row(); ?>
+		<tr index="<?php echo $index?>">
+			<td class="td-name">
+				<?php echo get_sub_field('name')?>
+			</td>
+			<td class="td-dosage">
+				<?php echo get_sub_field('dosage')?>
+			</td>
+			<td class="">
+				<span class="td-type"><?php echo get_sub_field('type')?></span>
+				<span class="td-unit" style="display:none"><?php echo get_sub_field('unit')?></span>
+			</td>
+			<td>
+				<span class="td-frequency"><?php echo get_sub_field('frequency')?></span>
+				<span class="td-reason" style="display:none"><?php echo get_sub_field('reason')?></span>
+				<span class="td-notes" style="display:none"><?php echo get_sub_field('notes')?></span>
+			</td>
+			<td>
+				<a class="action-btn current-medication-btn current-medication-edit-btn text-blue">Edit</a>
+				<a class="action-btn current-medication-btn current-medication-delete-btn text-danger">Delete</a>
 			</td>
 		</tr>
 		<?php $index++ ?>
