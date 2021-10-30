@@ -4,7 +4,7 @@ get_header();
 
 $user_id = get_current_user_id();
 $user_meta_data = get_user_meta($user_id);
-echo json_encode($user_meta_data);
+
 ?>
 
 <div class="page-account-content">

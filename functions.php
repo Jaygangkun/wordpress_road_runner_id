@@ -406,9 +406,9 @@ if (!is_user_logged_in()) {
     add_action('init', 'ajax_login_init');
 }
 
-$ignore_field_names = ['user_id', 'form_name', 'meta_type', 'list_count', 'list_index', 'form_action', 'action'];
-
 function updateForm() {
+	$ignore_field_names = ['user_id', 'form_name', 'meta_type', 'list_count', 'list_index', 'form_action', 'action'];
+
 	$resp = [
 		'success' => false
 	];
@@ -473,21 +473,32 @@ function updateForm() {
 			}
 
 			ob_start();
+
 			if($_POST['form_name'] == 'emergency_contacts') {
 				loadEmergencyContacts($_POST['user_id']);
-				$html = ob_get_contents();
 			}
 
 			if($_POST['form_name'] == 'allergies') {
 				loadAllergies($_POST['user_id']);
-				$html = ob_get_contents();
 			}
 
 			if($_POST['form_name'] == 'current_medications') {
 				loadCurrentMedications($_POST['user_id']);
-				$html = ob_get_contents();
 			}
 
+			if($_POST['form_name'] == 'medical_conditions') {
+				loadMedicalConditions($_POST['user_id']);
+			}
+
+			if($_POST['form_name'] == 'insurance') {
+				loadInsurances($_POST['user_id']);
+			}
+
+			if($_POST['form_name'] == 'physicians') {
+				loadPhysicians($_POST['user_id']);
+			}
+
+			$html = ob_get_contents();
 			ob_end_clean();
 			$resp['html'] = $html;
 			
@@ -504,7 +515,6 @@ function updateForm() {
 			}
 		}
 		
-
 		$resp['success'] = true;
 	}
 	
@@ -515,91 +525,231 @@ function updateForm() {
 add_action('wp_ajax_update_form', 'updateForm');
 add_action('wp_ajax_nopriv_update_form', 'updateForm');
 
+function updateAvatar() {
+	$resp = [
+		'success' => false
+	];
+
+	if(isset($_POST['user_id'])) {
+		global $wpdb;
+
+		if(isset($_FILES['profile_img'])){
+			$filename = $_FILES['profile_img']['name'];
+			$filename = str_replace(' ', '', $filename);
+            // Get extension
+            $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+            // Valid image extension
+            $valid_ext = array("png","jpeg","jpg");
+
+            // Check extension
+            if(in_array($ext, $valid_ext)){
+
+				$wp_upload_dir = wp_upload_dir();
+    			$upload_location = $wp_upload_dir['path'] . '/';
+                // File path
+                $path = $upload_location.$filename;
+
+                // Upload file
+                if(move_uploaded_file($_FILES['profile_img']['tmp_name'], $path)){
+                    $guids = $wp_upload_dir['url'].'/'.$filename;
+
+                    $attachment = array(
+                        'guid'=> $wp_upload_dir['url'].'/'.$filename, 
+                        'post_mime_type' => 'image/'.$ext,
+                        'post_title' => 'Avatar Image -'.$filename,
+                        'post_content' => '',
+                        'post_status' => 'inherit'
+                    );
+                    $image_id = wp_insert_attachment($attachment, $wp_upload_dir['url'].'/'.$filename);
+                    // Make sure that this file is included, as wp_generate_attachment_metadata() depends on it.
+                    require_once( ABSPATH . 'wp-admin/includes/image.php' ); 
+                    // Generate the metadata for the attachment, and update the database record.
+                    $attach_data = wp_generate_attachment_metadata( $image_id, $wp_upload_dir['url'].'/'.$filename );
+                    wp_update_attachment_metadata( $image_id, $attach_data );
+
+					update_user_meta($_POST['user_id'], 'profile_photo_image', $image_id);
+                }
+            }
+        }
+
+		$resp['success'] = true;
+	}
+
+	echo json_encode($resp);
+	die();
+}
+
+add_action('wp_ajax_update_avatar', 'updateAvatar');
+add_action('wp_ajax_nopriv_update_avatar', 'updateAvatar');
+
 function loadEmergencyContacts($user_id) {
-	$index = 0;
-	?>
-	<?php if( have_rows('emergency_contacts_list', 'user_'.$user_id) ): while ( have_rows('emergency_contacts_list', 'user_'.$user_id) ) : the_row(); ?>
+	$user_meta_data = get_user_meta($user_id);
+	$list_count = (int)getUserMetaData($user_meta_data, 'emergency_contacts', 'list');
+	for($index = 0; $index < $list_count; $index ++) {
+		?>
 		<tr index="<?php echo $index?>">
 			<td class="">
-				<span class="td-name"><?php echo get_sub_field('first_name').' '.get_sub_field('middle_name').' '.get_sub_field('last_name')?></span>
-				<span class="td-first-name" style="display:none"><?php echo get_sub_field('first_name')?></span>
-				<span class="td-middle-name" style="display:none"><?php echo get_sub_field('middle_name')?></span>
-				<span class="td-last-name" style="display:none"><?php echo get_sub_field('last_name')?></span>
-				<span class="td-email" style="display:none"><?php echo get_sub_field('email')?></span>
+				<span class="td-name"><?php echo getUserMetaListData($user_meta_data, 'emergency_contacts', 'first_name', $index).' '.getUserMetaListData($user_meta_data, 'emergency_contacts', 'middle_name', $index).' '.getUserMetaListData($user_meta_data, 'emergency_contacts', 'last_name', $index)?></span>
+				<span class="td-first-name" style="display:none"><?php echo getUserMetaListData($user_meta_data, 'emergency_contacts', 'first_name', $index)?></span>
+				<span class="td-middle-name" style="display:none"><?php echo getUserMetaListData($user_meta_data, 'emergency_contacts', 'middle_name', $index)?></span>
+				<span class="td-last-name" style="display:none"><?php echo getUserMetaListData($user_meta_data, 'emergency_contacts', 'last_name', $index)?></span>
+				<span class="td-email" style="display:none"><?php echo getUserMetaListData($user_meta_data, 'emergency_contacts', 'email', $index)?></span>
 			</td>
 			<td class="td-relationship">
-				<?php echo get_sub_field('relationship')?>
+				<?php echo getUserMetaListData($user_meta_data, 'emergency_contacts', 'relationship', $index)?>
 			</td>
 			<td class="td-phone">
-				<?php echo get_sub_field('phone')?>
+				<?php echo getUserMetaListData($user_meta_data, 'emergency_contacts', 'phone', $index)?>
 			</td>
 			<td>
 				<a class="action-btn emergency-contact-btn emergency-contact-edit-btn text-blue">Edit</a>
 				<a class="action-btn emergency-contact-btn emergency-contact-delete-btn text-danger">Delete</a>
 			</td>
 		</tr>
-		<?php $index++ ?>
-	<?php endwhile; endif;?>
-	<?php
+		<?php
+	}
 }
 
 function loadAllergies($user_id) {
-	$index = 0;
-	?>
-	<?php if( have_rows('allergies_list', 'user_'.$user_id) ): while ( have_rows('allergies_list', 'user_'.$user_id) ) : the_row(); ?>
+	$user_meta_data = get_user_meta($user_id);
+	$list_count = (int)getUserMetaData($user_meta_data, 'allergies', 'list');
+	for($index = 0; $index < $list_count; $index ++) {
+		?>
 		<tr index="<?php echo $index?>">
 			<td class="td-type">
-				<?php echo get_sub_field('type')?>
+				<?php echo getUserMetaListData($user_meta_data, 'allergies', 'type', $index)?>
 			</td>
 			<td class="td-allergy">
-				<?php echo get_sub_field('allergy')?>
+				<?php echo getUserMetaListData($user_meta_data, 'allergies', 'allergy', $index)?>
 			</td>
 			<td class="">
-				<span class="td-severity"><?php echo get_sub_field('severity')?></span>
-				<span class="td-notes" style="display:none"><?php echo get_sub_field('notes')?></span>
+				<span class="td-severity"><?php echo getUserMetaListData($user_meta_data, 'allergies', 'severity', $index)?></span>
+				<span class="td-notes" style="display:none"><?php echo getUserMetaListData($user_meta_data, 'allergies', 'notes', $index)?></span>
 			</td>
 			<td>
 				<a class="action-btn allergy-btn allergy-edit-btn text-blue">Edit</a>
 				<a class="action-btn allergy-btn allergy-delete-btn text-danger">Delete</a>
 			</td>
 		</tr>
-		<?php $index++ ?>
-	<?php endwhile; endif;?>
-	<?php
+		<?php
+	}
 }
 
 function loadCurrentMedications($user_id) {
-	$index = 0;
-	?>
-	<?php if( have_rows('current_medications_list', 'user_'.$user_id) ): while ( have_rows('current_medications_list', 'user_'.$user_id) ) : the_row(); ?>
+	$user_meta_data = get_user_meta($user_id);
+	$list_count = (int)getUserMetaData($user_meta_data, 'current_medications', 'list');
+	for($index = 0; $index < $list_count; $index ++) {
+		?>
 		<tr index="<?php echo $index?>">
 			<td class="td-name">
-				<?php echo get_sub_field('name')?>
+				<?php echo getUserMetaListData($user_meta_data, 'current_medications', 'name', $index)?>
 			</td>
 			<td class="td-dosage">
-				<?php echo get_sub_field('dosage')?>
+				<?php echo getUserMetaListData($user_meta_data, 'current_medications', 'dosage', $index)?>
 			</td>
 			<td class="">
-				<span class="td-type"><?php echo get_sub_field('type')?></span>
+				<span class="td-type"><?php echo getUserMetaListData($user_meta_data, 'current_medications', 'type', $index)?></span>
 				<span class="td-unit" style="display:none"><?php echo get_sub_field('unit')?></span>
 			</td>
 			<td>
-				<span class="td-frequency"><?php echo get_sub_field('frequency')?></span>
-				<span class="td-reason" style="display:none"><?php echo get_sub_field('reason')?></span>
-				<span class="td-notes" style="display:none"><?php echo get_sub_field('notes')?></span>
+				<span class="td-frequency"><?php echo getUserMetaListData($user_meta_data, 'current_medications', 'frequency', $index)?></span>
+				<span class="td-reason" style="display:none"><?php echo getUserMetaListData($user_meta_data, 'current_medications', 'reason', $index)?></span>
+				<span class="td-notes" style="display:none"><?php echo getUserMetaListData($user_meta_data, 'current_medications', 'notes', $index)?></span>
 			</td>
 			<td>
 				<a class="action-btn current-medication-btn current-medication-edit-btn text-blue">Edit</a>
 				<a class="action-btn current-medication-btn current-medication-delete-btn text-danger">Delete</a>
 			</td>
 		</tr>
-		<?php $index++ ?>
-	<?php endwhile; endif;?>
-	<?php
+		<?php
+	}
+}
+
+function loadMedicalConditions($user_id) {
+	$user_meta_data = get_user_meta($user_id);
+	$list_count = (int)getUserMetaData($user_meta_data, 'medical_conditions', 'list');
+	for($index = 0; $index < $list_count; $index ++) {
+		?>
+		<tr index="<?php echo $index?>">
+			<td class="td-condition">
+				<?php echo getUserMetaListData($user_meta_data, 'medical_conditions', 'condition', $index)?>
+			</td>
+			<td>
+				<span class="td-severity"><?php echo getUserMetaListData($user_meta_data, 'medical_conditions', 'severity', $index)?></span>
+				<span class="td-notes" style="display:none"><?php echo getUserMetaListData($user_meta_data, 'medical_conditions', 'notes', $index)?></span>
+			</td>
+			<td>
+				<a class="action-btn medical-condition-btn medical-condition-edit-btn text-blue">Edit</a>
+				<a class="action-btn medical-condition-btn medical-condition-delete-btn text-danger">Delete</a>
+			</td>
+		</tr>
+		<?php
+	}
+}
+
+function loadInsurances($user_id) {
+	$user_meta_data = get_user_meta($user_id);
+	$list_count = (int)getUserMetaData($user_meta_data, 'insurance', 'list');
+	for($index = 0; $index < $list_count; $index ++) {
+		?>
+		<tr index="<?php echo $index?>">
+			<td class="td-type">
+				<?php echo getUserMetaListData($user_meta_data, 'insurance', 'type', $index)?>
+			</td>
+			<td>
+				<span class="td-company"><?php echo getUserMetaListData($user_meta_data, 'insurance', 'company', $index)?></span>
+				<span class="td-group" style="display:none"><?php echo getUserMetaListData($user_meta_data, 'insurance', 'group', $index)?></span>
+				<span class="td-identification" style="display:none"><?php echo getUserMetaListData($user_meta_data, 'insurance', 'identification', $index)?></span>
+				<span class="td-additional" style="display:none"><?php echo getUserMetaListData($user_meta_data, 'insurance', 'additional', $index)?></span>
+			</td>
+			<td>
+				<a class="action-btn insurance-btn insurance-edit-btn text-blue">Edit</a>
+				<a class="action-btn insurance-btn insurance-delete-btn text-danger">Delete</a>
+			</td>
+		</tr>
+		<?php
+	}
+}
+
+function loadPhysicians($user_id) {
+	$user_meta_data = get_user_meta($user_id);
+	$list_count = (int)getUserMetaData($user_meta_data, 'physicians', 'list');
+	for($index = 0; $index < $list_count; $index ++) {
+		?>
+		<tr index="<?php echo $index?>">
+			<td class="td-speciality">
+				<?php echo getUserMetaListData($user_meta_data, 'physicians', 'speciality', $index)?>
+			</td>
+			<td>
+				<span class="td-name"><?php echo getUserMetaListData($user_meta_data, 'physicians', 'first_name', $index).' '.getUserMetaListData($user_meta_data, 'physicians', 'middle_name', $index).' '.getUserMetaListData($user_meta_data, 'physicians', 'last_name', $index)?></span>
+				<span class="td-first-name" style="display:none"><?php echo getUserMetaListData($user_meta_data, 'physicians', 'first_name', $index)?></span>
+				<span class="td-middle-name" style="display:none"><?php echo getUserMetaListData($user_meta_data, 'physicians', 'middle_name', $index)?></span>
+				<span class="td-last-name" style="display:none"><?php echo getUserMetaListData($user_meta_data, 'physicians', 'last_name', $index)?></span>
+				<span class="td-notes" style="display:none"><?php echo getUserMetaListData($user_meta_data, 'physicians', 'notes', $index)?></span>
+			</td>
+			<td class="td-phone">
+				<?php echo getUserMetaListData($user_meta_data, 'physicians', 'phone', $index)?>
+			</td>
+			<td class="td-email">
+				<?php echo getUserMetaListData($user_meta_data, 'physicians', 'email', $index)?>
+			</td>
+			<td>
+				<a class="action-btn physician-btn physician-edit-btn text-blue">Edit</a>
+				<a class="action-btn physician-btn physician-delete-btn text-danger">Delete</a>
+			</td>
+		</tr>
+		<?php
+	}
 }
 
 function getUserMetaData($meta, $form_name, $field_name) {
 	$meta_field_name = $form_name.'_'.$field_name;
+	return isset($meta[$meta_field_name]) ? $meta[$meta_field_name][0] : '';
+}
+
+function getUserMetaListData($meta, $form_name, $field_name, $index) {
+	$meta_field_name = $form_name.'_list_'.$index."_".$field_name;
 	return isset($meta[$meta_field_name]) ? $meta[$meta_field_name][0] : '';
 }
 ?>

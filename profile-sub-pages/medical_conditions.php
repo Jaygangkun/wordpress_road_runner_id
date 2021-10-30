@@ -3,7 +3,7 @@
 <div class="profile-sub-page" id="sp_medical_conditions">
     <h3>Medical Conditions</h3>
     <div class="text-end">
-        <span class="btn btn-blue">Add</span>
+        <span class="btn btn-blue" id="btn_add">Add</span>
     </div>
     <table class="table">
         <thead>
@@ -13,350 +13,229 @@
                 <th scope="col">Action</th>
             </tr>
         </thead>
-        <tbody>
-            
+        <tbody id="medical_conditions_list">
+			<?php
+            loadMedicalConditions($user_id);
+            ?>    
         </tbody>
     </table>
-    <form class="profile-form" id="medical_conditions">
-        <div class="mb-3">
-            <label for="first_name" class="form-label">Medical Condition</label>
-            <select class="form-select" aria-label="Default select example">
-				<option value="0">-- Select Condition --</option>
-				<option value="100248">Abdominal Aortic Aneurysm</option>
-				<option value="1">Abdominal Pain</option>
-				<option value="100260">Abnormal EKG</option>
-				<option value="2">Abnormal PAP</option>
-				<option value="100283">Acid Reflux</option>
-				<option value="3">Acne</option>
-				<option value="4">ADD</option>
-				<option value="100363">Addison's Disease</option>
-				<option value="5">ADHD</option>
-				<option value="100385">Adrenal Fatigue</option>
-				<option value="100395">Adrenal Insufficiency</option>
-				<option value="100415">AFIB</option>
-				<option value="100416">A-Fib</option>
-				<option value="6">AIDS</option>
-				<option value="7">Alcoholism</option>
-				<option value="100463">Allergic Rhinitis</option>
-				<option value="100476">Allergies</option>
-				<option value="8">Alzheimer's Disease</option>
-				<option value="9">Anemia</option>
-				<option value="100568">Aneurysm</option>
-				<option value="10">Angina</option>
-				<option value="100608">Ankylosing Spondylitis</option>
-				<option value="100640">Antiphospholipid Syndrome</option>
-				<option value="100647">Anxiety</option>
-				<option value="100661">Anxiety Disorder</option>
-				<option value="100692">Aortic Aneurysm</option>
-				<option value="100712">Aortic Insufficiency</option>
-				<option value="100723">Aortic Stenosis</option>
-				<option value="100760">Aphasia</option>
-				<option value="100803">Arrhythmia</option>
-				<option value="11">Arthritis</option>
-				<option value="12">Asperger's syndrome</option>
-				<option value="13">Asthma</option>
-				<option value="14">Atherosclerosis</option>
-				<option value="15">Athlete's Foot</option>
-				<option value="101037">Atrial fibrillation</option>
-				<option value="101078">Atrial Flutter</option>
-				<option value="16">Autism</option>
-				<option value="101262">Barrett's Esophagus</option>
-				<option value="101333">Benign Prostatic Hyperplasia</option>
-				<option value="101364">Bicuspid Aortic Valve</option>
-				<option value="101456">Bipolar</option>
-				<option value="101476">Bipolar Disorder</option>
-				<option value="101477">Bi-Polar Disorder</option>
-				<option value="17">Birthmarks</option>
-				<option value="18">Bladder Cancer</option>
-				<option value="19">Bladder Infections</option>
-				<option value="20">Bleeding Problems</option>
-				<option value="21">Blocked Tear Duct</option>
-				<option value="22">Blood Clotting Disorder</option>
-				<option value="101701">Bradycardia</option>
-				<option value="101716">Brain Cancer</option>
-				<option value="101739">Brain Tumor</option>
-				<option value="23">Breast Cancer</option>
-				<option value="24">Breast Cyst</option>
-				<option value="25">Breast Lumps</option>
-				<option value="26">Breast Mass</option>
-				<option value="101819">Bronchiectasis</option>
-				<option value="27">Bronchitis </option>
-				<option value="28">Bursitis</option>
-				<option value="29">Canker sores</option>
-				<option value="102040">Cardiomyopathy</option>
-				<option value="30">Carpal Tunnel Syndrome</option>
-				<option value="31">Cataracts</option>
-				<option value="102121">Celiac</option>
-				<option value="102125">Celiac Disease</option>
-				<option value="32">Cellulitis</option>
-				<option value="102160">Cerebral palsy</option>
-				<option value="102259">Chiari Malformation</option>
-				<option value="33">Chickenpox</option>
-				<option value="34">Chlamydia</option>
-				<option value="35">Chronic Constipation</option>
-				<option value="102354">Chronic Fatigue Syndrome</option>
-				<option value="36">Chronic Obstructive Pulmonary Disease (COPD)</option>
-				<option value="37">Chronic Pain</option>
-				<option value="102465">Chronic Sinusitis</option>
-				<option value="102546">Cluster Headaches</option>
-				<option value="38">Colic</option>
-				<option value="39">Colitis</option>
-				<option value="40">Colon Cancer</option>
-				<option value="41">Colon Polyps</option>
-				<option value="42">Congestive Heart Failure</option>
-				<option value="43">Conjunctivitis (pink eye)</option>
-				<option value="102732">Contact Lenses</option>
-				<option value="44">Contraception</option>
-				<option value="102756">COPD</option>
-				<option value="45">Corneal abrasions</option>
-				<option value="46">Coronary Artery Disease</option>
-				<option value="47">Cradle Cap</option>
-				<option value="48">Crohn's Disease</option>
-				<option value="49">Croup</option>
-				<option value="50">Cyst or Abscess of Vulva</option>
-				<option value="102918">Cystic Fibrosis</option>
-				<option value="102959">Deep Vein Thrombosis</option>
-				<option value="103007">Degenerative Disk Disease</option>
-				<option value="103029">Dementia</option>
-				<option value="51">Depression</option>
-				<option value="103100">Diabetes Insipidus</option>
-				<option value="52">Diabetes Type 1</option>
-				<option value="53">Diabetes Type 2</option>
-				<option value="54">Diarrhea</option>
-				<option value="55">Discomfort with sex</option>
-				<option value="103230">Diverticulitis</option>
-				<option value="103235">Diverticulosis</option>
-				<option value="56">Dizziness</option>
-				<option value="103281">Down Syndrome</option>
-				<option value="57">Drug Dependency</option>
-				<option value="103303">Dry Eyes</option>
-				<option value="103354">Dysautonomia</option>
-				<option value="103365">Dysphagia</option>
-				<option value="58">Dyspnea</option>
-				<option value="59">Ear Infection</option>
-				<option value="60">Eczema</option>
-				<option value="103425">Ehlers-Danlos Syndrome</option>
-				<option value="61">Emphysema</option>
-				<option value="62">Endometriosis</option>
-				<option value="103493">Enlarged Prostate</option>
-				<option value="103517">Eosinophilic esophagitis</option>
-				<option value="63">Epilepsy</option>
-				<option value="103591">Essential Tremor</option>
-				<option value="103628">Exercise Induced Asthma</option>
-				<option value="64">Eye Problem</option>
-				<option value="103724">Factor V Leiden</option>
-				<option value="65">Fainting</option>
-				<option value="103793">Fatty Liver</option>
-				<option value="66">Fibroids</option>
-				<option value="67">Fibromyalgia</option>
-				<option value="103998">Gastric Bypass</option>
-				<option value="68">Gastritis</option>
-				<option value="69">Gastroesophageal Reflux Disease (GERD)</option>
-				<option value="104036">Gastroparesis</option>
-				<option value="104049">General Anxiety Disorder</option>
-				<option value="70">Genital Warts</option>
-				<option value="104093">Gilbert's Syndrome</option>
-				<option value="71">Glaucoma</option>
-				<option value="104127">Gluten Intolerance</option>
-				<option value="72">Gonorrhea</option>
-				<option value="73">Gout</option>
-				<option value="104162">Grave's Disease</option>
-				<option value="74">Hand, Foot and Mouth Disease</option>
-				<option value="104265">Hashimoto's Disease</option>
-				<option value="104273">Hashimoto's Thyroiditis</option>
-				<option value="75">Hay Fever</option>
-				<option value="76">Head Lice</option>
-				<option value="77">Hearing Impairment</option>
-				<option value="78">Heart Condition</option>
-				<option value="79">Heart Disease</option>
-				<option value="104410">Heart Murmer</option>
-				<option value="104413">Heart murmur</option>
-				<option value="104472">Heart Transplant</option>
-				<option value="104518">Hemochromatosis</option>
-				<option value="80">Hemodialysis</option>
-				<option value="81">Hemorrhoids</option>
-				<option value="82">Hepatitis</option>
-				<option value="104566">Hepatitis C</option>
-				<option value="83">Hernia</option>
-				<option value="104616">Herniated Disc</option>
-				<option value="84">Herpes</option>
-				<option value="104701">Hiatal Hernia</option>
-				<option value="85">High Blood Cholesterol</option>
-				<option value="86">High Blood Pressure</option>
-				<option value="104749">High Cholesterol</option>
-				<option value="87">High Lipids</option>
-				<option value="104789">High Triglycerides</option>
-				<option value="104808">Hip Replacement</option>
-				<option value="88">HIV Positive</option>
-				<option value="89">Hives</option>
-				<option value="90">Hydrocephalus</option>
-				<option value="105084">Hypercholesterolemia</option>
-				<option value="105107">Hyperlipidemia</option>
-				<option value="105129">Hypertension</option>
-				<option value="105149">Hyperthyroidism</option>
-				<option value="105161">Hypertrophic Cardiomyopathy</option>
-				<option value="91">Hypoglycemia</option>
-				<option value="105194">Hypogonadism</option>
-				<option value="105199">Hypokalemia</option>
-				<option value="92">Hypothyroidism</option>
-				<option value="105239">Hysterectomy</option>
-				<option value="93">Impetigo</option>
-				<option value="94">Incontinence</option>
-				<option value="95">Infertility</option>
-				<option value="105439">Insomnia</option>
-				<option value="105446">Insulin Resistance</option>
-				<option value="115373">Intellectual Disability</option>
-				<option value="105482">Interstitial Cystitis</option>
-				<option value="105543">Irregular Heartbeat</option>
-				<option value="96">Irregular Periods</option>
-				<option value="97">Irritable Bowel Syndrome (IBS)</option>
-				<option value="105565">ITP</option>
-				<option value="98">Jaundice</option>
-				<option value="105620">Keratoconus</option>
-				<option value="99">Kidney Disease</option>
-				<option value="100">Kidney Failure</option>
-				<option value="101">Kidney Infections</option>
-				<option value="105671">Kidney Stones</option>
-				<option value="105684">Kidney Transplant</option>
-				<option value="105730">Knee Replacement</option>
-				<option value="105807">Lactose Intolerance</option>
-				<option value="105910">Left Bundle Branch Block</option>
-				<option value="102">Leukemia</option>
-				<option value="103">Limb Pain</option>
-				<option value="104">Liver Problems</option>
-				<option value="106113">Liver Transplant</option>
-				<option value="105">Low Back Pain</option>
-				<option value="106">Low Blood Pressure</option>
-				<option value="106241">Low Testosterone</option>
-				<option value="107">Lung Cancer</option>
-				<option value="108">Lupus</option>
-				<option value="109">Lyme Disease</option>
-				<option value="106345">Lymphedema</option>
-				<option value="106362">Lymphoma</option>
-				<option value="106377">Macular Degeneration</option>
-				<option value="106405">Malignant Hyperthermia</option>
-				<option value="110">Measles</option>
-				<option value="106506">Melanoma</option>
-				<option value="106538">Meniere's Disease</option>
-				<option value="111">Meningitis</option>
-				<option value="112">Menopause</option>
-				<option value="113">Mental Health Problem</option>
-				<option value="114">Mental Retardation</option>
-				<option value="106585">Metabolic Syndrome</option>
-				<option value="115">Migraine Headache</option>
-				<option value="106663">Migraines</option>
-				<option value="116">Miscarriage</option>
-				<option value="106824">Mitral Valve Prolapse</option>
-				<option value="106862">Mitral Valve Regurgitation</option>
-				<option value="106878">Mitro Valve Prolapse</option>
-				<option value="117">Mononucleosis</option>
-				<option value="118">Multifocal</option>
-				<option value="106997">Multiple Myeloma</option>
-				<option value="119">Multiple Sclerosis</option>
-				<option value="120">Mumps</option>
-				<option value="121">Muscle Disorder</option>
-				<option value="107050">Myasthenia Gravis</option>
-				<option value="107087">Myopia</option>
-				<option value="107114">Narcolepsy</option>
-				<option value="122">Neck Pain</option>
-				<option value="107226">Neurocardiogenic Syncope</option>
-				<option value="107245">Neurogenic bladder</option>
-				<option value="107260">Neuropathy</option>
-				<option value="123">Nipple Discharge</option>
-				<option value="124">Non Hodgkin Lymphoma</option>
-				<option value="125">Nose Bleeds</option>
-				<option value="126">Numbness</option>
-				<option value="107441">Obesity</option>
-				<option value="107446">Obsessive Compulsive Disorder</option>
-				<option value="107455">Obstructive Sleep Apnea</option>
-				<option value="127">Open Wounds</option>
-				<option value="128">Osteoarthritis</option>
-				<option value="107643">Osteopenia</option>
-				<option value="129">Osteoporosis</option>
-				<option value="130">Other Cancer</option>
-				<option value="131">Ovarian Cancer</option>
-				<option value="132">Ovarian Cysts</option>
-				<option value="107686">Pacemaker</option>
-				<option value="133">Pain or Pressure in Chest</option>
-				<option value="134">Palpitations</option>
-				<option value="135">Paralysis</option>
-				<option value="136">Parkinson's Disease</option>
-				<option value="137">Pelvic Inflammatory Disease</option>
-				<option value="138">Peptic Ulcer Disease</option>
-				<option value="139">Periods of Unconsciousness</option>
-				<option value="140">Pertussis (Whooping Cough)</option>
-				<option value="141">Phlebitis</option>
-				<option value="142">Pinworms</option>
-				<option value="143">Pneumonia</option>
-				<option value="144">Polio</option>
-				<option value="145">Postmenopausal Bleeding </option>
-				<option value="146">Postpartum Depression</option>
-				<option value="108329">Pre-diabetes</option>
-				<option value="147">Pregnancy</option>
-				<option value="148">Prostate Cancer</option>
-				<option value="149">Prostate Problems</option>
-				<option value="150">Psoriasis</option>
-				<option value="151">Psychiatric Disorder</option>
-				<option value="108568">PTSD</option>
-				<option value="152">Pulmonary Embolism</option>
-				<option value="153">Rash</option>
-				<option value="154">Rectal Bleeding</option>
-				<option value="155">Rectal Cancer</option>
-				<option value="156">Rheumatic Fever</option>
-				<option value="157">Rheumatism</option>
-				<option value="158">Ringworm</option>
-				<option value="159">Roseola</option>
-				<option value="160">Rubella</option>
-				<option value="161">Scabies</option>
-				<option value="162">Scarlet Fever</option>
-				<option value="163">Scoliosis</option>
-				<option value="164">Seizure Disorder</option>
-				<option value="165">Seizures</option>
-				<option value="166">Sexual Dysfunction</option>
-				<option value="167">Shingles</option>
-				<option value="168">Shortness of Breath</option>
-				<option value="169">Sickle Cell</option>
-				<option value="170">Sinus Infection</option>
-				<option value="171">Sinus Problem</option>
-				<option value="172">Skin Cancer</option>
-				<option value="173">Skin Lesion</option>
-				<option value="109587">Sleep Apnea</option>
-				<option value="174">Smoking</option>
-				<option value="175">Stomach or Intestinal Problems</option>
-				<option value="176">Strep Throat</option>
-				<option value="177">Stroke</option>
-				<option value="178">Swimmer's Ear</option>
-				<option value="179">Syphilis</option>
-				<option value="180">Thyroid Problems</option>
-				<option value="181">Tonsillitis</option>
-				<option value="182">Toxemia</option>
-				<option value="183">Tubal Pregnancy</option>
-				<option value="184">Tuberculosis</option>
-				<option value="185">Tumor</option>
-				<option value="186">Upper Respiratory Infection</option>
-				<option value="187">Urinary Cancer</option>
-				<option value="188">Urinary Tract Infections</option>
-				<option value="189">Uterine Cancer</option>
-				<option value="190">Varicose Veins</option>
-				<option value="191">Warts</option>
-            </select>
+	<!-- Modal -->
+    <div class="modal fade profile-form-modal" id="modal_medical_conditions" tabindex="-1" aria-labelledby="modal_medical_conditions_label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title modal-title-add" id="modal_medical_conditions_label">Add Medical Condition</h4>
+                    <h4 class="modal-title modal-title-edit" id="modal_medical_conditions_label">Edit Medical Condition</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+					<form class="profile-form" id="medical_conditions">
+						<div class="mb-3">
+							<label for="condition" class="form-label">Medical Condition</label>
+							<select class="form-select" aria-label="" name="condition">
+								<option value="">-- Select --</option>
+								<?php
+                                foreach($const_medical_conditions as $condition) {
+                                    ?>
+                                    <option value="<?php echo $condition?>"><?php echo $condition?></option>
+                                    <?php
+                                }
+                                ?>
+							</select>
+						</div>
+						<div class="mb-3">
+							<label for="severity" class="form-label">Severity</label>
+							<select class="form-select" aria-label="" name="severity">
+								<option value="">--Select --</option>
+								<?php
+                                foreach($const_severities as $severity) {
+                                    ?>
+                                    <option value="<?php echo $severity?>"><?php echo $severity?></option>
+                                    <?php
+                                }
+                                ?>
+							</select>
+						</div>
+						<div class="mb-3">
+							<label for="notes" class="form-label">Notes</label>
+							<textarea class="form-control" name="notes" rows="3"></textarea>
+						</div>
+						<input type="hidden" class="form-control" name="list_index" aria-describedby="list_index">
+					</form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-blue btn-save" id="btn_save">Add</button>
+                    <button type="button" class="btn btn-blue btn-update" id="btn_update">Update</button>
+                </div>
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="first_name" class="form-label">Severity</label>
-            <select class="form-select" aria-label="Default select example">
-                <option selected="selected" value="">--Select --</option>
-                <option value="1">Mild</option>
-                <option value="2">Moderate</option>
-                <option value="3">Severe</option>
-                <option value="4">N/A</option>
-            </select>
+    </div>
+
+    <div class="modal fade profile-confirm-modal" tabindex="-1" id="modal_medical_conditions_confirm">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title modal-title-new">Are you sure to delete?</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" id="modal_medical_conditions_confirm_btn">Delete</button>
+                </div>
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="first_name" class="form-label">Notes</label>
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+    </div>
+    <div class="modal fade profile-results-modal" tabindex="-1" id="modal_medical_conditions_results">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-success" role="alert">Success</div>
+                    <div class="alert alert-danger" role="alert">Failed</div>
+                </div>
+            </div>
         </div>
-        <div class="text-end">
-            <span class="btn btn-blue">Save</span>
-        </div>
-    </form>
+    </div>
 </div>
+<script>
+    (function($){
+        var medical_conditions_list_count = <?php echo getUserMetaData($user_meta_data, 'medical_conditions', 'list') == '' ? 0 : getUserMetaData($user_meta_data, 'medical_conditions', 'list') ?>;
+
+        var medical_conditions_list = $('#medical_conditions_list');
+
+        var modal_medical_conditions_confirm = $('#modal_medical_conditions_confirm');
+        var modal_medical_conditions_results = $('#modal_medical_conditions_results');
+
+        $(document).on('click', '#modal_medical_conditions #btn_save', function() {
+            $('#medical_conditions [name="list_index"]').val(-1);
+            let formData = new FormData($('#medical_conditions')[0]);
+            formData.append('form_name', 'medical_conditions');
+            formData.append('meta_type', 'list');
+            formData.append('user_id', <?php echo $user_id?>);
+            formData.append('action', 'update_form');
+            formData.append('list_count', medical_conditions_list_count);
+            $.ajax({
+                url: wp_admin_url,
+                type: 'post',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(resp) {
+                    if(resp.success) {
+                        $(modal_medical_conditions_results).removeClass('fail');
+                        $(modal_medical_conditions_results).modal('toggle');
+                        
+                        $(medical_conditions_list).html(resp.html);
+                        medical_conditions_list_count++;
+                    }
+                    else {
+                        $(modal_medical_conditions_results).addClass('fail');
+                        $(modal_medical_conditions_results).modal('toggle');
+                    }
+                    modal_medical_conditions.toggle();
+                }
+            })
+        })
+
+        $(document).on('click', '#modal_medical_conditions #btn_update', function() {
+            let formData = new FormData($('#medical_conditions')[0]);
+            formData.append('form_name', 'medical_conditions');
+            formData.append('meta_type', 'list');
+            formData.append('user_id', <?php echo $user_id?>);
+            formData.append('action', 'update_form');
+            $.ajax({
+                url: wp_admin_url,
+                type: 'post',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(resp) {
+                    if(resp.success) {
+                        $(modal_medical_conditions_results).removeClass('fail');
+                        $(modal_medical_conditions_results).modal('toggle');
+
+                        $(medical_conditions_list).html(resp.html);
+                    }
+                    else {
+                        $(modal_medical_conditions_results).addClass('fail');
+                        $(modal_medical_conditions_results).modal('toggle');
+                    }
+                    modal_medical_conditions.toggle();
+                }
+            })
+        })
+
+        var modal_medical_conditions = new bootstrap.Modal(document.getElementById('modal_medical_conditions'), {
+            keyboard: false
+        });
+        var $modal_medical_conditions = $('#modal_medical_conditions');
+
+        $(document).on('click', '#sp_medical_conditions #btn_add', function() {
+            $($modal_medical_conditions).removeClass('edit');
+            $($modal_medical_conditions).find('input').val('');
+            $($modal_medical_conditions).find('select').val('');
+            $($modal_medical_conditions).find('textarea').val('');
+
+            modal_medical_conditions.toggle();
+        })
+
+        $(document).on('click', '.medical-condition-edit-btn', function() {
+            var tr = $(this).parents('tr');
+
+            $($modal_medical_conditions).addClass('edit');
+
+            $($modal_medical_conditions).find('[name="condition"]').val($(tr).find('.td-condition').text().trim());
+            $($modal_medical_conditions).find('[name="severity"]').val($(tr).find('.td-severity').text().trim());
+            $($modal_medical_conditions).find('[name="notes"]').val($(tr).find('.td-notes').text().trim());
+            $($modal_medical_conditions).find('[name="list_index"]').val($(tr).attr('index'));
+
+            modal_medical_conditions.toggle();
+        })
+
+        $(document).on('click', '.medical-condition-delete-btn', function() {
+            var tr = $(this).parents('tr');
+            $($modal_medical_conditions).find('[name="list_index"]').val($(tr).attr('index'));
+            $(modal_medical_conditions_confirm).modal('toggle');
+        })
+
+        $(document).on('click', '#modal_medical_conditions_confirm_btn', function() {
+            $(modal_medical_conditions_confirm).modal('toggle');
+
+            let formData = new FormData($('#medical_conditions')[0]);
+            formData.append('form_name', 'medical_conditions');
+            formData.append('meta_type', 'list');
+            formData.append('user_id', <?php echo $user_id?>);
+            formData.append('action', 'update_form');
+            formData.append('form_action', 'delete');
+            formData.append('list_count', medical_conditions_list_count);
+            $.ajax({
+                url: wp_admin_url,
+                type: 'post',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(resp) {
+                    if(resp.success) {
+                        $(modal_medical_conditions_results).removeClass('fail');
+                        $(modal_medical_conditions_results).modal('toggle');
+
+                        $(medical_conditions_list).html(resp.html);
+
+                        medical_conditions_list_count--;
+                    }
+                    else {
+                        $(modal_medical_conditions_results).addClass('fail');
+                        $(modal_medical_conditions_results).modal('toggle');
+                    }
+                }
+            })
+        })
+
+    })(jQuery)
+</script>

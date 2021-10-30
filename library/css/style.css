@@ -578,7 +578,12 @@ body {
 
 .erp-row__img {
   margin-right: 30px;
-  width: 80px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .erp__name {
@@ -694,4 +699,14 @@ body {
 .profile-sub-page .nav-link:hover,
 .profile-sub-page .nav-link:focus {
   color: #114b64;
+}
+
+.profile-image-wrap {
+  width: 200px;
+  height: 200px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-bottom: 20px;
+  border: 1px solid black;
 }

@@ -6,16 +6,6 @@ get_header();
 
 <div class="page-account-content">
     <div class="my-5">
-        <div class="card">
-            <div class="card-body">
-                <h2 class="card-title">My Account</h2>
-                <div class="text-end">
-                    <button class="btn btn-blue">Edit Account</button>
-                </div>
-                <p>Hello David Thomas. Welcome back. Please update your Emergency Response Profiles (ERP). It's important to keep your ERP current and verify that all the information is current and accurate. Be safe out there!
-                    If you have any questions, please email us at EdwardW@RoadID.com or call 800-345-6336.</p>
-            </div>
-        </div>
         <div class="card mt-3">
             <div class="card-body">
                 <h2 class="card-title">Profile</h2>  
@@ -25,33 +15,35 @@ get_header();
                 <div class="erp-list mt-3">
                     <div class="erp-row">
                         <div class="erp-row-wrap">
-                            <img class="erp-row__img" src="<?php echo get_template_directory_uri()?>/library/images/erp-no-image.png">
+                            <?php
+                            $user_id = get_current_user_id();
+                            $user_meta_data = get_user_meta($user_id);
+
+                            $img_url = get_avatar_url($user_id);
+                            $img_id = getUserMetaData($user_meta_data, 'profile_photo', 'image');
+                            if( $img_id != '') {
+                                $img_url = wp_get_attachment_url($img_id);
+                                $img_url = preg_replace('/ /', '%20', $img_url);
+                            }
+                            ?>
+                            <img class="erp-row__img" src="<?php echo $img_url?>">
                             <div class="erp-row-info">
-                                <h3 class="erp__name">David Thomas</h3>
+                                <h3 class="erp__name"><?php echo getUserMetaData($user_meta_data, 'personal_identification', 'first_name').' '.getUserMetaData($user_meta_data, 'personal_identification', 'middle_name').' '.getUserMetaData($user_meta_data, 'personal_identification', 'last_name')?></h3>
                                 <div class="erp-info-row">
-                                    <span class="erp-info__title">ID Serial:</span>
-                                    <span class="erp-info__value">12397767</span>
+                                    <span class="erp-info__title">Gender:</span>
+                                    <span class="erp-info__value"><?php echo getUserMetaData($user_meta_data, 'personal_identification', 'gender')?></span>
                                 </div>
                                 <div class="erp-info-row">
-                                    <span class="erp-info__title">Nickname:</span>
-                                    <span class="erp-info__value">Faceplate ID</span>
-                                </div>
-                                <div class="my-3"></div>
-                                <div class="erp-info-row">
-                                    <span class="erp-info__title">Status:</span>
-                                    <span class="erp-info__value">Active</span>
+                                    <span class="erp-info__title">Phone Number:</span>
+                                    <span class="erp-info__value"><?php echo getUserMetaData($user_meta_data, 'personal_identification', 'phone')?></span>
                                 </div>
                                 <div class="erp-info-row">
-                                    <span class="erp-info__title">Membership:</span>
-                                    <span class="erp-info__value">Expires December 20, 2021</span>
+                                    <span class="erp-info__title">Ethnicity:</span>
+                                    <span class="erp-info__value"><?php echo getUserMetaData($user_meta_data, 'personal_identification', 'organ_donor')?></span>
                                 </div>
                                 <div class="erp-info-row">
-                                    <span class="erp-info__title">Auto Renew:</span>
-                                    <span class="erp-info__value">On</span>
-                                </div>
-                                <div class="erp-info-row">
-                                    <span class="erp-info__title">Alerts:</span>
-                                    <span class="erp-info__value">View Alerts</span>
+                                    <span class="erp-info__title">Organ Donor:</span>
+                                    <span class="erp-info__value"><?php echo getUserMetaData($user_meta_data, 'personal_identification', 'ethnicity')?></span>
                                 </div>
                             </div>
                         </div>
