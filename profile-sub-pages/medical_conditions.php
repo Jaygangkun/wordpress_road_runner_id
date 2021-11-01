@@ -2,9 +2,15 @@
 ?>
 <div class="profile-sub-page" id="sp_medical_conditions">
     <h3>Medical Conditions</h3>
-    <div class="text-end">
-        <span class="btn btn-blue" id="btn_add">Add</span>
-    </div>
+    <?php
+    if($_SESSION['loginUser'] == 'CT') {
+        ?>
+        <div class="text-end">
+            <span class="btn btn-blue" id="btn_add">Add</span>
+        </div>
+        <?php
+    }
+    ?>
     <table class="table">
         <thead>
             <tr>
@@ -65,177 +71,219 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-blue btn-save" id="btn_save">Add</button>
-                    <button type="button" class="btn btn-blue btn-update" id="btn_update">Update</button>
+                    <?php
+                    if($_SESSION['loginUser'] == 'CT') {
+                        ?>
+                        <button type="button" class="btn btn-blue btn-save" id="btn_save">Add</button>
+                        <button type="button" class="btn btn-blue btn-update" id="btn_update">Update</button>
+                        <?php
+                    }
+                    ?>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade profile-confirm-modal" tabindex="-1" id="modal_medical_conditions_confirm">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title modal-title-new">Are you sure to delete?</h3>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-danger" id="modal_medical_conditions_confirm_btn">Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade profile-results-modal" tabindex="-1" id="modal_medical_conditions_results">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-success" role="alert">Success</div>
-                    <div class="alert alert-danger" role="alert">Failed</div>
+    <?php
+    if($_SESSION['loginUser'] == 'CT') {
+        ?>
+        <div class="modal fade profile-confirm-modal" tabindex="-1" id="modal_medical_conditions_confirm">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title modal-title-new">Are you sure to delete?</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" id="modal_medical_conditions_confirm_btn">Delete</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        <div class="modal fade profile-results-modal" tabindex="-1" id="modal_medical_conditions_results">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-success" role="alert">Success</div>
+                        <div class="alert alert-danger" role="alert">Failed</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+    ?>
 </div>
 <script>
     (function($){
-        var medical_conditions_list_count = <?php echo getUserMetaData($user_meta_data, 'medical_conditions', 'list') == '' ? 0 : getUserMetaData($user_meta_data, 'medical_conditions', 'list') ?>;
+        <?php
+        if($_SESSION['loginUser'] == 'CT') {
+            ?>
+            var medical_conditions_list_count = <?php echo getUserMetaData($user_meta_data, 'medical_conditions', 'list') == '' ? 0 : getUserMetaData($user_meta_data, 'medical_conditions', 'list') ?>;
 
-        var medical_conditions_list = $('#medical_conditions_list');
+            var medical_conditions_list = $('#medical_conditions_list');
 
-        var modal_medical_conditions_confirm = $('#modal_medical_conditions_confirm');
-        var modal_medical_conditions_results = $('#modal_medical_conditions_results');
+            var modal_medical_conditions_confirm = $('#modal_medical_conditions_confirm');
+            var modal_medical_conditions_results = $('#modal_medical_conditions_results');
 
-        $(document).on('click', '#modal_medical_conditions #btn_save', function() {
-            $('#medical_conditions [name="list_index"]').val(-1);
-            let formData = new FormData($('#medical_conditions')[0]);
-            formData.append('form_name', 'medical_conditions');
-            formData.append('meta_type', 'list');
-            formData.append('user_id', <?php echo $user_id?>);
-            formData.append('action', 'update_form');
-            formData.append('list_count', medical_conditions_list_count);
-            $.ajax({
-                url: wp_admin_url,
-                type: 'post',
-                data: formData,
-                processData: false,
-                contentType: false,
-                dataType: 'json',
-                success: function(resp) {
-                    if(resp.success) {
-                        $(modal_medical_conditions_results).removeClass('fail');
-                        $(modal_medical_conditions_results).modal('toggle');
-                        
-                        $(medical_conditions_list).html(resp.html);
-                        medical_conditions_list_count++;
+            $(document).on('click', '#modal_medical_conditions #btn_save', function() {
+                $('#medical_conditions [name="list_index"]').val(-1);
+                let formData = new FormData($('#medical_conditions')[0]);
+                formData.append('form_name', 'medical_conditions');
+                formData.append('meta_type', 'list');
+                formData.append('user_id', <?php echo $user_id?>);
+                formData.append('action', 'update_form');
+                formData.append('list_count', medical_conditions_list_count);
+                $.ajax({
+                    url: wp_admin_url,
+                    type: 'post',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function(resp) {
+                        if(resp.success) {
+                            $(modal_medical_conditions_results).removeClass('fail');
+                            $(modal_medical_conditions_results).modal('toggle');
+                            
+                            $(medical_conditions_list).html(resp.html);
+                            medical_conditions_list_count++;
+                        }
+                        else {
+                            $(modal_medical_conditions_results).addClass('fail');
+                            $(modal_medical_conditions_results).modal('toggle');
+                        }
+                        modal_medical_conditions.toggle();
                     }
-                    else {
-                        $(modal_medical_conditions_results).addClass('fail');
-                        $(modal_medical_conditions_results).modal('toggle');
-                    }
-                    modal_medical_conditions.toggle();
-                }
+                })
             })
-        })
 
-        $(document).on('click', '#modal_medical_conditions #btn_update', function() {
-            let formData = new FormData($('#medical_conditions')[0]);
-            formData.append('form_name', 'medical_conditions');
-            formData.append('meta_type', 'list');
-            formData.append('user_id', <?php echo $user_id?>);
-            formData.append('action', 'update_form');
-            $.ajax({
-                url: wp_admin_url,
-                type: 'post',
-                data: formData,
-                processData: false,
-                contentType: false,
-                dataType: 'json',
-                success: function(resp) {
-                    if(resp.success) {
-                        $(modal_medical_conditions_results).removeClass('fail');
-                        $(modal_medical_conditions_results).modal('toggle');
+            $(document).on('click', '#modal_medical_conditions #btn_update', function() {
+                let formData = new FormData($('#medical_conditions')[0]);
+                formData.append('form_name', 'medical_conditions');
+                formData.append('meta_type', 'list');
+                formData.append('user_id', <?php echo $user_id?>);
+                formData.append('action', 'update_form');
+                $.ajax({
+                    url: wp_admin_url,
+                    type: 'post',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function(resp) {
+                        if(resp.success) {
+                            $(modal_medical_conditions_results).removeClass('fail');
+                            $(modal_medical_conditions_results).modal('toggle');
 
-                        $(medical_conditions_list).html(resp.html);
+                            $(medical_conditions_list).html(resp.html);
+                        }
+                        else {
+                            $(modal_medical_conditions_results).addClass('fail');
+                            $(modal_medical_conditions_results).modal('toggle');
+                        }
+                        modal_medical_conditions.toggle();
                     }
-                    else {
-                        $(modal_medical_conditions_results).addClass('fail');
-                        $(modal_medical_conditions_results).modal('toggle');
-                    }
-                    modal_medical_conditions.toggle();
-                }
+                })
             })
-        })
 
-        var modal_medical_conditions = new bootstrap.Modal(document.getElementById('modal_medical_conditions'), {
-            keyboard: false
-        });
-        var $modal_medical_conditions = $('#modal_medical_conditions');
+            var modal_medical_conditions = new bootstrap.Modal(document.getElementById('modal_medical_conditions'), {
+                keyboard: false
+            });
+            var $modal_medical_conditions = $('#modal_medical_conditions');
 
-        $(document).on('click', '#sp_medical_conditions #btn_add', function() {
-            $($modal_medical_conditions).removeClass('edit');
-            $($modal_medical_conditions).find('input').val('');
-            $($modal_medical_conditions).find('select').val('');
-            $($modal_medical_conditions).find('textarea').val('');
+            $(document).on('click', '#sp_medical_conditions #btn_add', function() {
+                $($modal_medical_conditions).removeClass('edit');
+                $($modal_medical_conditions).find('input').val('');
+                $($modal_medical_conditions).find('select').val('');
+                $($modal_medical_conditions).find('textarea').val('');
 
-            modal_medical_conditions.toggle();
-        })
-
-        $(document).on('click', '.medical-condition-edit-btn', function() {
-            var tr = $(this).parents('tr');
-
-            $($modal_medical_conditions).addClass('edit');
-
-            $($modal_medical_conditions).find('[name="condition"]').val($(tr).find('.td-condition').text().trim());
-            $($modal_medical_conditions).find('[name="severity"]').val($(tr).find('.td-severity').text().trim());
-            $($modal_medical_conditions).find('[name="notes"]').val($(tr).find('.td-notes').text().trim());
-            $($modal_medical_conditions).find('[name="list_index"]').val($(tr).attr('index'));
-
-            modal_medical_conditions.toggle();
-        })
-
-        $(document).on('click', '.medical-condition-delete-btn', function() {
-            var tr = $(this).parents('tr');
-            $($modal_medical_conditions).find('[name="list_index"]').val($(tr).attr('index'));
-            $(modal_medical_conditions_confirm).modal('toggle');
-        })
-
-        $(document).on('click', '#modal_medical_conditions_confirm_btn', function() {
-            $(modal_medical_conditions_confirm).modal('toggle');
-
-            let formData = new FormData($('#medical_conditions')[0]);
-            formData.append('form_name', 'medical_conditions');
-            formData.append('meta_type', 'list');
-            formData.append('user_id', <?php echo $user_id?>);
-            formData.append('action', 'update_form');
-            formData.append('form_action', 'delete');
-            formData.append('list_count', medical_conditions_list_count);
-            $.ajax({
-                url: wp_admin_url,
-                type: 'post',
-                data: formData,
-                processData: false,
-                contentType: false,
-                dataType: 'json',
-                success: function(resp) {
-                    if(resp.success) {
-                        $(modal_medical_conditions_results).removeClass('fail');
-                        $(modal_medical_conditions_results).modal('toggle');
-
-                        $(medical_conditions_list).html(resp.html);
-
-                        medical_conditions_list_count--;
-                    }
-                    else {
-                        $(modal_medical_conditions_results).addClass('fail');
-                        $(modal_medical_conditions_results).modal('toggle');
-                    }
-                }
+                modal_medical_conditions.toggle();
             })
-        })
 
+            $(document).on('click', '.medical-condition-edit-btn', function() {
+                var tr = $(this).parents('tr');
+
+                $($modal_medical_conditions).addClass('edit');
+
+                $($modal_medical_conditions).find('[name="condition"]').val($(tr).find('.td-condition').text().trim());
+                $($modal_medical_conditions).find('[name="severity"]').val($(tr).find('.td-severity').text().trim());
+                $($modal_medical_conditions).find('[name="notes"]').val($(tr).find('.td-notes').text().trim());
+                $($modal_medical_conditions).find('[name="list_index"]').val($(tr).attr('index'));
+
+                modal_medical_conditions.toggle();
+            })
+
+            $(document).on('click', '.medical-condition-delete-btn', function() {
+                var tr = $(this).parents('tr');
+                $($modal_medical_conditions).find('[name="list_index"]').val($(tr).attr('index'));
+                $(modal_medical_conditions_confirm).modal('toggle');
+            })
+
+            $(document).on('click', '#modal_medical_conditions_confirm_btn', function() {
+                $(modal_medical_conditions_confirm).modal('toggle');
+
+                let formData = new FormData($('#medical_conditions')[0]);
+                formData.append('form_name', 'medical_conditions');
+                formData.append('meta_type', 'list');
+                formData.append('user_id', <?php echo $user_id?>);
+                formData.append('action', 'update_form');
+                formData.append('form_action', 'delete');
+                formData.append('list_count', medical_conditions_list_count);
+                $.ajax({
+                    url: wp_admin_url,
+                    type: 'post',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function(resp) {
+                        if(resp.success) {
+                            $(modal_medical_conditions_results).removeClass('fail');
+                            $(modal_medical_conditions_results).modal('toggle');
+
+                            $(medical_conditions_list).html(resp.html);
+
+                            medical_conditions_list_count--;
+                        }
+                        else {
+                            $(modal_medical_conditions_results).addClass('fail');
+                            $(modal_medical_conditions_results).modal('toggle');
+                        }
+                    }
+                })
+            })
+            <?php
+        }
+        else if($_SESSION['loginUser'] == 'FR') {
+            ?>
+            $('#medical_conditions input').attr('disabled', true);
+            $('#medical_conditions select').attr('disabled', true);
+            $('#medical_conditions textarea').attr('disabled', true);
+
+            var modal_medical_conditions = new bootstrap.Modal(document.getElementById('modal_medical_conditions'), {
+                keyboard: false
+            });
+            var $modal_medical_conditions = $('#modal_medical_conditions');
+
+            $(document).on('click', '.medical-condition-view-btn', function() {
+                var tr = $(this).parents('tr');
+
+                $($modal_medical_conditions).addClass('view');
+
+                $($modal_medical_conditions).find('[name="condition"]').val($(tr).find('.td-condition').text().trim());
+                $($modal_medical_conditions).find('[name="severity"]').val($(tr).find('.td-severity').text().trim());
+                $($modal_medical_conditions).find('[name="notes"]').val($(tr).find('.td-notes').text().trim());
+                $($modal_medical_conditions).find('[name="list_index"]').val($(tr).attr('index'));
+
+                modal_medical_conditions.toggle();
+            })
+            <?php
+        }
+        ?>
     })(jQuery)
 </script>

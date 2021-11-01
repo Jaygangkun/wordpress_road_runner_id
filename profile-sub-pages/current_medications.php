@@ -2,9 +2,15 @@
 ?>
 <div class="profile-sub-page" id="sp_current_medications">
     <h3>Current Medications</h3>
-    <div class="text-end">
-        <span class="btn btn-blue" id="btn_add">Add</span>
-    </div>
+    <?php
+    if($_SESSION['loginUser'] == 'CT') {
+        ?>
+        <div class="text-end">
+            <span class="btn btn-blue" id="btn_add">Add</span>
+        </div>
+        <?php
+    }
+    ?>
     <table class="table">
         <thead>
             <tr>
@@ -103,181 +109,231 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-blue btn-save" id="btn_save">Add</button>
-                    <button type="button" class="btn btn-blue btn-update" id="btn_update">Update</button>
+                    <?php
+                    if($_SESSION['loginUser'] == 'CT') {
+                        ?>
+                        <button type="button" class="btn btn-blue btn-save" id="btn_save">Add</button>
+                        <button type="button" class="btn btn-blue btn-update" id="btn_update">Update</button>
+                        <?php
+                    }
+                    ?>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade profile-confirm-modal" tabindex="-1" id="modal_current_medications_confirm">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title modal-title-new">Are you sure to delete?</h3>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-danger" id="modal_current_medications_confirm_btn">Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade profile-results-modal" tabindex="-1" id="modal_current_medications_results">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-success" role="alert">Success</div>
-                    <div class="alert alert-danger" role="alert">Failed</div>
+    <?php
+    if($_SESSION['loginUser'] == 'CT') {
+        ?>
+        <div class="modal fade profile-confirm-modal" tabindex="-1" id="modal_current_medications_confirm">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title modal-title-new">Are you sure to delete?</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" id="modal_current_medications_confirm_btn">Delete</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        <div class="modal fade profile-results-modal" tabindex="-1" id="modal_current_medications_results">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-success" role="alert">Success</div>
+                        <div class="alert alert-danger" role="alert">Failed</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+    ?>
 </div>
 <script>
     (function($){
-        var current_medications_list_count = <?php echo getUserMetaData($user_meta_data, 'current_medications', 'list') == '' ? 0 : getUserMetaData($user_meta_data, 'current_medications', 'list') ?>;
+        <?php
+        if($_SESSION['loginUser'] == 'CT') {
+            ?>
+            var current_medications_list_count = <?php echo getUserMetaData($user_meta_data, 'current_medications', 'list') == '' ? 0 : getUserMetaData($user_meta_data, 'current_medications', 'list') ?>;
 
-        var current_medications_list = $('#current_medications_list');
+            var current_medications_list = $('#current_medications_list');
 
-        var modal_current_medications_confirm = $('#modal_current_medications_confirm');
-        var modal_current_medications_results = $('#modal_current_medications_results');
+            var modal_current_medications_confirm = $('#modal_current_medications_confirm');
+            var modal_current_medications_results = $('#modal_current_medications_results');
 
-        $(document).on('click', '#modal_current_medications #btn_save', function() {
-            $('#current_medications [name="list_index"]').val(-1);
-            let formData = new FormData($('#current_medications')[0]);
-            formData.append('form_name', 'current_medications');
-            formData.append('meta_type', 'list');
-            formData.append('user_id', <?php echo $user_id?>);
-            formData.append('action', 'update_form');
-            formData.append('list_count', current_medications_list_count);
-            $.ajax({
-                url: wp_admin_url,
-                type: 'post',
-                data: formData,
-                processData: false,
-                contentType: false,
-                dataType: 'json',
-                success: function(resp) {
-                    if(resp.success) {
-                        $(modal_current_medications_results).removeClass('fail');
-                        $(modal_current_medications_results).modal('toggle');
-                        
-                        $(current_medications_list).html(resp.html);
-                        current_medications_list_count++;
+            $(document).on('click', '#modal_current_medications #btn_save', function() {
+                $('#current_medications [name="list_index"]').val(-1);
+                let formData = new FormData($('#current_medications')[0]);
+                formData.append('form_name', 'current_medications');
+                formData.append('meta_type', 'list');
+                formData.append('user_id', <?php echo $user_id?>);
+                formData.append('action', 'update_form');
+                formData.append('list_count', current_medications_list_count);
+                $.ajax({
+                    url: wp_admin_url,
+                    type: 'post',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function(resp) {
+                        if(resp.success) {
+                            $(modal_current_medications_results).removeClass('fail');
+                            $(modal_current_medications_results).modal('toggle');
+                            
+                            $(current_medications_list).html(resp.html);
+                            current_medications_list_count++;
+                        }
+                        else {
+                            $(modal_current_medications_results).addClass('fail');
+                            $(modal_current_medications_results).modal('toggle');
+                        }
+                        modal_current_medications.toggle();
                     }
-                    else {
-                        $(modal_current_medications_results).addClass('fail');
-                        $(modal_current_medications_results).modal('toggle');
-                    }
-                    modal_current_medications.toggle();
-                }
+                })
             })
-        })
 
-        $(document).on('click', '#modal_current_medications #btn_update', function() {
-            let formData = new FormData($('#current_medications')[0]);
-            formData.append('form_name', 'current_medications');
-            formData.append('meta_type', 'list');
-            formData.append('user_id', <?php echo $user_id?>);
-            formData.append('action', 'update_form');
-            $.ajax({
-                url: wp_admin_url,
-                type: 'post',
-                data: formData,
-                processData: false,
-                contentType: false,
-                dataType: 'json',
-                success: function(resp) {
-                    if(resp.success) {
-                        $(modal_current_medications_results).removeClass('fail');
-                        $(modal_current_medications_results).modal('toggle');
+            $(document).on('click', '#modal_current_medications #btn_update', function() {
+                let formData = new FormData($('#current_medications')[0]);
+                formData.append('form_name', 'current_medications');
+                formData.append('meta_type', 'list');
+                formData.append('user_id', <?php echo $user_id?>);
+                formData.append('action', 'update_form');
+                $.ajax({
+                    url: wp_admin_url,
+                    type: 'post',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function(resp) {
+                        if(resp.success) {
+                            $(modal_current_medications_results).removeClass('fail');
+                            $(modal_current_medications_results).modal('toggle');
 
-                        $(current_medications_list).html(resp.html);
+                            $(current_medications_list).html(resp.html);
+                        }
+                        else {
+                            $(modal_current_medications_results).addClass('fail');
+                            $(modal_current_medications_results).modal('toggle');
+                        }
+                        modal_current_medications.toggle();
                     }
-                    else {
-                        $(modal_current_medications_results).addClass('fail');
-                        $(modal_current_medications_results).modal('toggle');
-                    }
-                    modal_current_medications.toggle();
-                }
+                })
             })
-        })
 
-        var modal_current_medications = new bootstrap.Modal(document.getElementById('modal_current_medications'), {
-            keyboard: false
-        });
-        var $modal_current_medications = $('#modal_current_medications');
+            var modal_current_medications = new bootstrap.Modal(document.getElementById('modal_current_medications'), {
+                keyboard: false
+            });
+            var $modal_current_medications = $('#modal_current_medications');
 
-        $(document).on('click', '#sp_current_medications #btn_add', function() {
-            $($modal_current_medications).removeClass('edit');
-            $($modal_current_medications).find('input').val('');
-            $($modal_current_medications).find('select').val('');
-            $($modal_current_medications).find('textarea').val('');
+            $(document).on('click', '#sp_current_medications #btn_add', function() {
+                $($modal_current_medications).removeClass('edit');
+                $($modal_current_medications).find('input').val('');
+                $($modal_current_medications).find('select').val('');
+                $($modal_current_medications).find('textarea').val('');
 
-            modal_current_medications.toggle();
-        })
-
-        $(document).on('click', '.current-medication-edit-btn', function() {
-            var tr = $(this).parents('tr');
-
-            $($modal_current_medications).addClass('edit');
-
-            $($modal_current_medications).find('[name="name"]').val($(tr).find('.td-name').text().trim());
-            $($modal_current_medications).find('[name="dosage"]').val($(tr).find('.td-dosage').text().trim());
-            $($modal_current_medications).find('[name="unit"]').val($(tr).find('.td-unit').text().trim());
-            $($modal_current_medications).find('[name="type"]').val($(tr).find('.td-type').text().trim());
-            $($modal_current_medications).find('[name="frequency"]').val($(tr).find('.td-frequency').text().trim());
-            $($modal_current_medications).find('[name="reason"]').val($(tr).find('.td-reason').text().trim());
-			$($modal_current_medications).find('[name="notes"]').val($(tr).find('.td-notes').text().trim());
-            $($modal_current_medications).find('[name="list_index"]').val($(tr).attr('index'));
-
-            modal_current_medications.toggle();
-        })
-
-        $(document).on('click', '.current-medication-delete-btn', function() {
-            var tr = $(this).parents('tr');
-            $($modal_current_medications).find('[name="list_index"]').val($(tr).attr('index'));
-            $(modal_current_medications_confirm).modal('toggle');
-        })
-
-        $(document).on('click', '#modal_current_medications_confirm_btn', function() {
-            $(modal_current_medications_confirm).modal('toggle');
-
-            let formData = new FormData($('#current_medications')[0]);
-            formData.append('form_name', 'current_medications');
-            formData.append('meta_type', 'list');
-            formData.append('user_id', <?php echo $user_id?>);
-            formData.append('action', 'update_form');
-            formData.append('form_action', 'delete');
-            formData.append('list_count', current_medications_list_count);
-            $.ajax({
-                url: wp_admin_url,
-                type: 'post',
-                data: formData,
-                processData: false,
-                contentType: false,
-                dataType: 'json',
-                success: function(resp) {
-                    if(resp.success) {
-                        $(modal_current_medications_results).removeClass('fail');
-                        $(modal_current_medications_results).modal('toggle');
-
-                        $(current_medications_list).html(resp.html);
-
-                        current_medications_list_count--;
-                    }
-                    else {
-                        $(modal_current_medications_results).addClass('fail');
-                        $(modal_current_medications_results).modal('toggle');
-                    }
-                }
+                modal_current_medications.toggle();
             })
-        })
+
+            $(document).on('click', '.current-medication-edit-btn', function() {
+                var tr = $(this).parents('tr');
+
+                $($modal_current_medications).addClass('edit');
+
+                $($modal_current_medications).find('[name="name"]').val($(tr).find('.td-name').text().trim());
+                $($modal_current_medications).find('[name="dosage"]').val($(tr).find('.td-dosage').text().trim());
+                $($modal_current_medications).find('[name="unit"]').val($(tr).find('.td-unit').text().trim());
+                $($modal_current_medications).find('[name="type"]').val($(tr).find('.td-type').text().trim());
+                $($modal_current_medications).find('[name="frequency"]').val($(tr).find('.td-frequency').text().trim());
+                $($modal_current_medications).find('[name="reason"]').val($(tr).find('.td-reason').text().trim());
+                $($modal_current_medications).find('[name="notes"]').val($(tr).find('.td-notes').text().trim());
+                $($modal_current_medications).find('[name="list_index"]').val($(tr).attr('index'));
+
+                modal_current_medications.toggle();
+            })
+
+            $(document).on('click', '.current-medication-delete-btn', function() {
+                var tr = $(this).parents('tr');
+                $($modal_current_medications).find('[name="list_index"]').val($(tr).attr('index'));
+                $(modal_current_medications_confirm).modal('toggle');
+            })
+
+            $(document).on('click', '#modal_current_medications_confirm_btn', function() {
+                $(modal_current_medications_confirm).modal('toggle');
+
+                let formData = new FormData($('#current_medications')[0]);
+                formData.append('form_name', 'current_medications');
+                formData.append('meta_type', 'list');
+                formData.append('user_id', <?php echo $user_id?>);
+                formData.append('action', 'update_form');
+                formData.append('form_action', 'delete');
+                formData.append('list_count', current_medications_list_count);
+                $.ajax({
+                    url: wp_admin_url,
+                    type: 'post',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function(resp) {
+                        if(resp.success) {
+                            $(modal_current_medications_results).removeClass('fail');
+                            $(modal_current_medications_results).modal('toggle');
+
+                            $(current_medications_list).html(resp.html);
+
+                            current_medications_list_count--;
+                        }
+                        else {
+                            $(modal_current_medications_results).addClass('fail');
+                            $(modal_current_medications_results).modal('toggle');
+                        }
+                    }
+                })
+            })
+            <?php
+        }
+        else if($_SESSION['loginUser'] == 'FR') {
+            ?>
+            $('#current_medications input').attr('disabled', true);
+            $('#current_medications select').attr('disabled', true);
+            $('#current_medications textarea').attr('disabled', true);
+
+            var modal_current_medications = new bootstrap.Modal(document.getElementById('modal_current_medications'), {
+                keyboard: false
+            });
+            var $modal_current_medications = $('#modal_current_medications');
+
+            $(document).on('click', '.current-medication-view-btn', function() {
+                var tr = $(this).parents('tr');
+
+                $($modal_current_medications).addClass('view');
+
+                $($modal_current_medications).find('[name="name"]').val($(tr).find('.td-name').text().trim());
+                $($modal_current_medications).find('[name="dosage"]').val($(tr).find('.td-dosage').text().trim());
+                $($modal_current_medications).find('[name="unit"]').val($(tr).find('.td-unit').text().trim());
+                $($modal_current_medications).find('[name="type"]').val($(tr).find('.td-type').text().trim());
+                $($modal_current_medications).find('[name="frequency"]').val($(tr).find('.td-frequency').text().trim());
+                $($modal_current_medications).find('[name="reason"]').val($(tr).find('.td-reason').text().trim());
+                $($modal_current_medications).find('[name="notes"]').val($(tr).find('.td-notes').text().trim());
+                $($modal_current_medications).find('[name="list_index"]').val($(tr).attr('index'));
+
+                modal_current_medications.toggle();
+            })
+
+            <?php
+        }
+        ?>
+
+        
 
     })(jQuery)
 </script>

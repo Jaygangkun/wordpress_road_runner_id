@@ -58,52 +58,76 @@
             <label for="notes" class="form-label">Notes</label>
             <textarea class="form-control" name="notes" rows="3"><?php echo getUserMetaData($user_meta_data, 'addresses', 'notes')?></textarea>
         </div>
-        <div class="text-end">
-            <span class="btn btn-blue" id="btn_save">Save</span>
-        </div>
+        <?php
+        if($_SESSION['loginUser'] == 'CT') {
+            ?>
+            <div class="text-end">
+                <span class="btn btn-blue" id="btn_save">Save</span>
+            </div>
+            <?php
+        }
+        ?>
     </form>
-    <div class="modal fade profile-results-modal" tabindex="-1" id="modal_addresses_results">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-success" role="alert">Success</div>
-                    <div class="alert alert-danger" role="alert">Failed</div>
+    <?php
+    if($_SESSION['loginUser'] == 'CT') {
+        ?>
+        <div class="modal fade profile-results-modal" tabindex="-1" id="modal_addresses_results">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-success" role="alert">Success</div>
+                        <div class="alert alert-danger" role="alert">Failed</div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        <?php
+    }
+    ?>
 </div>
 <script>
     (function($){
-        
-        var modal_addresses_results = $('#modal_addresses_results');
+        <?php
+        if($_SESSION['loginUser'] == 'FR') {
+            ?>
+            $('#addresses input').attr('disabled', true);
+            $('#addresses select').attr('disabled', true);
+            $('#addresses textarea').attr('disabled', true);
+            <?php
+        }
+        else if($_SESSION['loginUser'] == 'CT'){
+            ?>
+            var modal_addresses_results = $('#modal_addresses_results');
 
-        $(document).on('click', '#addresses #btn_save', function() {
-            let formData = new FormData($('#addresses')[0]);
-            formData.append('form_name', 'addresses');
-            formData.append('user_id', <?php echo $user_id?>);
-            formData.append('action', 'update_form');
-            $.ajax({
-                url: wp_admin_url,
-                type: 'post',
-                data: formData,
-                processData: false,
-                contentType: false,
-                dataType: 'json',
-                success: function(resp) {
-                    if(resp.success) {
-                        $(modal_addresses_results).removeClass('fail');
-                        $(modal_addresses_results).modal('toggle');
+            $(document).on('click', '#addresses #btn_save', function() {
+                let formData = new FormData($('#addresses')[0]);
+                formData.append('form_name', 'addresses');
+                formData.append('user_id', <?php echo $user_id?>);
+                formData.append('action', 'update_form');
+                $.ajax({
+                    url: wp_admin_url,
+                    type: 'post',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function(resp) {
+                        if(resp.success) {
+                            $(modal_addresses_results).removeClass('fail');
+                            $(modal_addresses_results).modal('toggle');
+                        }
+                        else {
+                            $(modal_addresses_results).addClass('fail');
+                            $(modal_addresses_results).modal('toggle');
+                        }
                     }
-                    else {
-                        $(modal_addresses_results).addClass('fail');
-                        $(modal_addresses_results).modal('toggle');
-                    }
-                }
+                })
             })
-        })
+            <?php
+        }
+        ?>
     })(jQuery)
 </script>

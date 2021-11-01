@@ -2,9 +2,15 @@
 ?>
 <div class="profile-sub-page" id="sp_physicians">
     <h3>Physicians</h3>
-    <div class="text-end">
-        <span class="btn btn-blue" id="btn_add">Add</span>
-    </div>
+    <?php
+    if($_SESSION['loginUser'] == 'CT') {
+        ?>
+        <div class="text-end">
+            <span class="btn btn-blue" id="btn_add">Add</span>
+        </div>
+        <?php
+    }
+    ?>
     <table class="table">
         <thead>
             <tr>
@@ -76,182 +82,226 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-blue btn-save" id="btn_save">Add</button>
-                    <button type="button" class="btn btn-blue btn-update" id="btn_update">Update</button>
+                    <?php
+                    if($_SESSION['loginUser'] == 'CT') {
+                        ?>
+                        <button type="button" class="btn btn-blue btn-save" id="btn_save">Add</button>
+                        <button type="button" class="btn btn-blue btn-update" id="btn_update">Update</button>
+                        <?php
+                    }
+                    ?>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="modal fade profile-confirm-modal" tabindex="-1" id="modal_physicians_confirm">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title modal-title-new">Are you sure to delete?</h3>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-danger" id="modal_physicians_confirm_btn">Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade profile-results-modal" tabindex="-1" id="modal_physicians_results">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-success" role="alert">Success</div>
-                    <div class="alert alert-danger" role="alert">Failed</div>
+    <?php
+    if($_SESSION['loginUser'] == 'CT') {
+        ?>
+        <div class="modal fade profile-confirm-modal" tabindex="-1" id="modal_physicians_confirm">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title modal-title-new">Are you sure to delete?</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" id="modal_physicians_confirm_btn">Delete</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    
+        <div class="modal fade profile-results-modal" tabindex="-1" id="modal_physicians_results">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-success" role="alert">Success</div>
+                        <div class="alert alert-danger" role="alert">Failed</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+    ?>
 </div>
 <script>
     (function($){
-        var physicians_list_count = <?php echo getUserMetaData($user_meta_data, 'physicians', 'list') == '' ? 0 : getUserMetaData($user_meta_data, 'physicians', 'list') ?>;
+        <?php
+        if($_SESSION['loginUser'] == 'CT') {
+            ?>
+            var physicians_list_count = <?php echo getUserMetaData($user_meta_data, 'physicians', 'list') == '' ? 0 : getUserMetaData($user_meta_data, 'physicians', 'list') ?>;
 
-        var physicians_list = $('#physicians_list');
+            var physicians_list = $('#physicians_list');
 
-        var modal_physicians_confirm = $('#modal_physicians_confirm');
-        var modal_physicians_results = $('#modal_physicians_results');
+            var modal_physicians_confirm = $('#modal_physicians_confirm');
+            var modal_physicians_results = $('#modal_physicians_results');
 
-        $(document).on('click', '#modal_physicians #btn_save', function() {
-            $('#physicians [name="list_index"]').val(-1);
-            let formData = new FormData($('#physicians')[0]);
-            formData.append('form_name', 'physicians');
-            formData.append('meta_type', 'list');
-            formData.append('user_id', <?php echo $user_id?>);
-            formData.append('action', 'update_form');
-            formData.append('list_count', physicians_list_count);
-            $.ajax({
-                url: wp_admin_url,
-                type: 'post',
-                data: formData,
-                processData: false,
-                contentType: false,
-                dataType: 'json',
-                success: function(resp) {
-                    if(resp.success) {
-                        $(modal_physicians_results).removeClass('fail');
-                        $(modal_physicians_results).modal('toggle');
-                        
-                        $(physicians_list).html(resp.html);
-                        physicians_list_count++;
+            $(document).on('click', '#modal_physicians #btn_save', function() {
+                $('#physicians [name="list_index"]').val(-1);
+                let formData = new FormData($('#physicians')[0]);
+                formData.append('form_name', 'physicians');
+                formData.append('meta_type', 'list');
+                formData.append('user_id', <?php echo $user_id?>);
+                formData.append('action', 'update_form');
+                formData.append('list_count', physicians_list_count);
+                $.ajax({
+                    url: wp_admin_url,
+                    type: 'post',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function(resp) {
+                        if(resp.success) {
+                            $(modal_physicians_results).removeClass('fail');
+                            $(modal_physicians_results).modal('toggle');
+                            
+                            $(physicians_list).html(resp.html);
+                            physicians_list_count++;
+                        }
+                        else {
+                            $(modal_physicians_results).addClass('fail');
+                            $(modal_physicians_results).modal('toggle');
+                        }
+                        modal_physicians.toggle();
                     }
-                    else {
-                        $(modal_physicians_results).addClass('fail');
-                        $(modal_physicians_results).modal('toggle');
-                    }
-                    modal_physicians.toggle();
-                }
+                })
             })
-        })
 
-        $(document).on('click', '#modal_physicians #btn_update', function() {
-            let formData = new FormData($('#physicians')[0]);
-            formData.append('form_name', 'physicians');
-            formData.append('meta_type', 'list');
-            formData.append('user_id', <?php echo $user_id?>);
-            formData.append('action', 'update_form');
-            $.ajax({
-                url: wp_admin_url,
-                type: 'post',
-                data: formData,
-                processData: false,
-                contentType: false,
-                dataType: 'json',
-                success: function(resp) {
-                    if(resp.success) {
-                        $(modal_physicians_results).removeClass('fail');
-                        $(modal_physicians_results).modal('toggle');
+            $(document).on('click', '#modal_physicians #btn_update', function() {
+                let formData = new FormData($('#physicians')[0]);
+                formData.append('form_name', 'physicians');
+                formData.append('meta_type', 'list');
+                formData.append('user_id', <?php echo $user_id?>);
+                formData.append('action', 'update_form');
+                $.ajax({
+                    url: wp_admin_url,
+                    type: 'post',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function(resp) {
+                        if(resp.success) {
+                            $(modal_physicians_results).removeClass('fail');
+                            $(modal_physicians_results).modal('toggle');
 
-                        $(physicians_list).html(resp.html);
+                            $(physicians_list).html(resp.html);
+                        }
+                        else {
+                            $(modal_physicians_results).addClass('fail');
+                            $(modal_physicians_results).modal('toggle');
+                        }
+                        modal_physicians.toggle();
                     }
-                    else {
-                        $(modal_physicians_results).addClass('fail');
-                        $(modal_physicians_results).modal('toggle');
-                    }
-                    modal_physicians.toggle();
-                }
+                })
             })
-        })
 
-        var modal_physicians = new bootstrap.Modal(document.getElementById('modal_physicians'), {
-            keyboard: false
-        });
-        var $modal_physicians = $('#modal_physicians');
+            var modal_physicians = new bootstrap.Modal(document.getElementById('modal_physicians'), {
+                keyboard: false
+            });
+            var $modal_physicians = $('#modal_physicians');
 
-        $(document).on('click', '#sp_physicians #btn_add', function() {
-            $($modal_physicians).removeClass('edit');
-            $($modal_physicians).find('input').val('');
-            $($modal_physicians).find('select').val('');
-            $($modal_physicians).find('textarea').val('');
+            $(document).on('click', '#sp_physicians #btn_add', function() {
+                $($modal_physicians).removeClass('edit');
+                $($modal_physicians).find('input').val('');
+                $($modal_physicians).find('select').val('');
+                $($modal_physicians).find('textarea').val('');
 
-            modal_physicians.toggle();
-        })
-
-        $(document).on('click', '.physician-edit-btn', function() {
-            var tr = $(this).parents('tr');
-
-            $($modal_physicians).addClass('edit');
-
-            $($modal_physicians).find('[name="speciality"]').val($(tr).find('.td-speciality').text().trim());
-            $($modal_physicians).find('[name="first_name"]').val($(tr).find('.td-first-name').text().trim());
-            $($modal_physicians).find('[name="middle_name"]').val($(tr).find('.td-middle-name').text().trim());
-            $($modal_physicians).find('[name="last_name"]').val($(tr).find('.td-last-name').text().trim());
-            $($modal_physicians).find('[name="phone"]').val($(tr).find('.td-phone').text().trim());
-            $($modal_physicians).find('[name="email"]').val($(tr).find('.td-email').text().trim());
-            $($modal_physicians).find('[name="notes"]').val($(tr).find('.td-notes').text().trim());
-            $($modal_physicians).find('[name="list_index"]').val($(tr).attr('index'));
-
-            modal_physicians.toggle();
-        })
-
-        $(document).on('click', '.physician-delete-btn', function() {
-            var tr = $(this).parents('tr');
-            $($modal_physicians).find('[name="list_index"]').val($(tr).attr('index'));
-            $(modal_physicians_confirm).modal('toggle');
-        })
-
-        $(document).on('click', '#modal_physicians_confirm_btn', function() {
-            $(modal_physicians_confirm).modal('toggle');
-
-            let formData = new FormData($('#physicians')[0]);
-            formData.append('form_name', 'physicians');
-            formData.append('meta_type', 'list');
-            formData.append('user_id', <?php echo $user_id?>);
-            formData.append('action', 'update_form');
-            formData.append('form_action', 'delete');
-            formData.append('list_count', physicians_list_count);
-            $.ajax({
-                url: wp_admin_url,
-                type: 'post',
-                data: formData,
-                processData: false,
-                contentType: false,
-                dataType: 'json',
-                success: function(resp) {
-                    if(resp.success) {
-                        $(modal_physicians_results).removeClass('fail');
-                        $(modal_physicians_results).modal('toggle');
-
-                        $(physicians_list).html(resp.html);
-
-                        physicians_list_count--;
-                    }
-                    else {
-                        $(modal_physicians_results).addClass('fail');
-                        $(modal_physicians_results).modal('toggle');
-                    }
-                }
+                modal_physicians.toggle();
             })
-        })
 
+            $(document).on('click', '.physician-edit-btn', function() {
+                var tr = $(this).parents('tr');
+
+                $($modal_physicians).addClass('edit');
+
+                $($modal_physicians).find('[name="speciality"]').val($(tr).find('.td-speciality').text().trim());
+                $($modal_physicians).find('[name="first_name"]').val($(tr).find('.td-first-name').text().trim());
+                $($modal_physicians).find('[name="middle_name"]').val($(tr).find('.td-middle-name').text().trim());
+                $($modal_physicians).find('[name="last_name"]').val($(tr).find('.td-last-name').text().trim());
+                $($modal_physicians).find('[name="phone"]').val($(tr).find('.td-phone').text().trim());
+                $($modal_physicians).find('[name="email"]').val($(tr).find('.td-email').text().trim());
+                $($modal_physicians).find('[name="notes"]').val($(tr).find('.td-notes').text().trim());
+                $($modal_physicians).find('[name="list_index"]').val($(tr).attr('index'));
+
+                modal_physicians.toggle();
+            })
+
+            $(document).on('click', '.physician-delete-btn', function() {
+                var tr = $(this).parents('tr');
+                $($modal_physicians).find('[name="list_index"]').val($(tr).attr('index'));
+                $(modal_physicians_confirm).modal('toggle');
+            })
+
+            $(document).on('click', '#modal_physicians_confirm_btn', function() {
+                $(modal_physicians_confirm).modal('toggle');
+
+                let formData = new FormData($('#physicians')[0]);
+                formData.append('form_name', 'physicians');
+                formData.append('meta_type', 'list');
+                formData.append('user_id', <?php echo $user_id?>);
+                formData.append('action', 'update_form');
+                formData.append('form_action', 'delete');
+                formData.append('list_count', physicians_list_count);
+                $.ajax({
+                    url: wp_admin_url,
+                    type: 'post',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function(resp) {
+                        if(resp.success) {
+                            $(modal_physicians_results).removeClass('fail');
+                            $(modal_physicians_results).modal('toggle');
+
+                            $(physicians_list).html(resp.html);
+
+                            physicians_list_count--;
+                        }
+                        else {
+                            $(modal_physicians_results).addClass('fail');
+                            $(modal_physicians_results).modal('toggle');
+                        }
+                    }
+                })
+            })
+            <?php
+        }
+        else if($_SESSION['loginUser'] == 'FR') {
+            ?>
+            $('#physicians input').attr('disabled', true);
+            $('#physicians select').attr('disabled', true);
+            $('#physicians textarea').attr('disabled', true);
+
+            var modal_physicians = new bootstrap.Modal(document.getElementById('modal_physicians'), {
+                keyboard: false
+            });
+            var $modal_physicians = $('#modal_physicians');
+
+            $(document).on('click', '.physician-view-btn', function() {
+                var tr = $(this).parents('tr');
+
+                $($modal_physicians).addClass('view');
+
+                $($modal_physicians).find('[name="speciality"]').val($(tr).find('.td-speciality').text().trim());
+                $($modal_physicians).find('[name="first_name"]').val($(tr).find('.td-first-name').text().trim());
+                $($modal_physicians).find('[name="middle_name"]').val($(tr).find('.td-middle-name').text().trim());
+                $($modal_physicians).find('[name="last_name"]').val($(tr).find('.td-last-name').text().trim());
+                $($modal_physicians).find('[name="phone"]').val($(tr).find('.td-phone').text().trim());
+                $($modal_physicians).find('[name="email"]').val($(tr).find('.td-email').text().trim());
+                $($modal_physicians).find('[name="notes"]').val($(tr).find('.td-notes').text().trim());
+                $($modal_physicians).find('[name="list_index"]').val($(tr).attr('index'));
+
+                modal_physicians.toggle();
+            })
+            <?php
+        }
+        ?>
     })(jQuery)
 </script>

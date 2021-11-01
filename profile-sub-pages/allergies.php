@@ -2,9 +2,15 @@
 ?>
 <div class="profile-sub-page" id="sp_allergies">
     <h3>Allergies</h3>
-    <div class="text-end">
-        <span class="btn btn-blue" id="btn_add">Add</span>
-    </div>
+    <?php
+    if($_SESSION['loginUser'] == 'CT') {
+        ?>
+        <div class="text-end">
+            <span class="btn btn-blue" id="btn_add">Add</span>
+        </div>
+        <?php
+    }
+    ?>
     <table class="table">
         <thead>
             <tr>
@@ -79,179 +85,225 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-blue btn-save" id="btn_save">Add</button>
-                    <button type="button" class="btn btn-blue btn-update" id="btn_update">Update</button>
+                    <?php
+                    if($_SESSION['loginUser'] == 'CT') {
+                        ?>
+                        <button type="button" class="btn btn-blue btn-save" id="btn_save">Add</button>
+                        <button type="button" class="btn btn-blue btn-update" id="btn_update">Update</button>
+                        <?php
+                    }
+                    ?>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade profile-confirm-modal" tabindex="-1" id="modal_allergies_confirm">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title modal-title-new">Are you sure to delete?</h3>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-danger" id="modal_allergies_confirm_btn">Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade profile-results-modal" tabindex="-1" id="modal_allergies_results">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-success" role="alert">Success</div>
-                    <div class="alert alert-danger" role="alert">Failed</div>
+    <?php
+    if($_SESSION['loginUser'] == 'CT') {
+        ?>
+        <div class="modal fade profile-confirm-modal" tabindex="-1" id="modal_allergies_confirm">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title modal-title-new">Are you sure to delete?</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" id="modal_allergies_confirm_btn">Delete</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        <div class="modal fade profile-results-modal" tabindex="-1" id="modal_allergies_results">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-success" role="alert">Success</div>
+                        <div class="alert alert-danger" role="alert">Failed</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+    ?>
 </div>
 
 <script>
     (function($){
-        var allergies_list_count = <?php echo getUserMetaData($user_meta_data, 'allergies', 'list') == '' ? 0 : getUserMetaData($user_meta_data, 'allergies', 'list')?>;
+        <?php
+        if($_SESSION['loginUser'] == 'CT') {
+            ?>
+            var allergies_list_count = <?php echo getUserMetaData($user_meta_data, 'allergies', 'list') == '' ? 0 : getUserMetaData($user_meta_data, 'allergies', 'list')?>;
 
-        var allergies_list = $('#allergies_list');
+            var allergies_list = $('#allergies_list');
 
-        var modal_allergies_confirm = $('#modal_allergies_confirm');
-        var modal_allergies_results = $('#modal_allergies_results');
+            var modal_allergies_confirm = $('#modal_allergies_confirm');
+            var modal_allergies_results = $('#modal_allergies_results');
 
-        $(document).on('click', '#modal_allergies #btn_save', function() {
-            $('#allergies [name="list_index"]').val(-1);
-            let formData = new FormData($('#allergies')[0]);
-            formData.append('form_name', 'allergies');
-            formData.append('meta_type', 'list');
-            formData.append('user_id', <?php echo $user_id?>);
-            formData.append('action', 'update_form');
-            formData.append('list_count', allergies_list_count);
-            $.ajax({
-                url: wp_admin_url,
-                type: 'post',
-                data: formData,
-                processData: false,
-                contentType: false,
-                dataType: 'json',
-                success: function(resp) {
-                    if(resp.success) {
-                        $(modal_allergies_results).removeClass('fail');
-                        $(modal_allergies_results).modal('toggle');
-                        
-                        $(allergies_list).html(resp.html);
-                        allergies_list_count++;
+            $(document).on('click', '#modal_allergies #btn_save', function() {
+                $('#allergies [name="list_index"]').val(-1);
+                let formData = new FormData($('#allergies')[0]);
+                formData.append('form_name', 'allergies');
+                formData.append('meta_type', 'list');
+                formData.append('user_id', <?php echo $user_id?>);
+                formData.append('action', 'update_form');
+                formData.append('list_count', allergies_list_count);
+                $.ajax({
+                    url: wp_admin_url,
+                    type: 'post',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function(resp) {
+                        if(resp.success) {
+                            $(modal_allergies_results).removeClass('fail');
+                            $(modal_allergies_results).modal('toggle');
+                            
+                            $(allergies_list).html(resp.html);
+                            allergies_list_count++;
+                        }
+                        else {
+                            $(modal_allergies_results).addClass('fail');
+                            $(modal_allergies_results).modal('toggle');
+                        }
+                        modal_allergies.toggle();
                     }
-                    else {
-                        $(modal_allergies_results).addClass('fail');
-                        $(modal_allergies_results).modal('toggle');
-                    }
-                    modal_allergies.toggle();
-                }
+                })
             })
-        })
 
-        $(document).on('click', '#modal_allergies #btn_update', function() {
-            let formData = new FormData($('#allergies')[0]);
-            formData.append('form_name', 'allergies');
-            formData.append('meta_type', 'list');
-            formData.append('user_id', <?php echo $user_id?>);
-            formData.append('action', 'update_form');
-            $.ajax({
-                url: wp_admin_url,
-                type: 'post',
-                data: formData,
-                processData: false,
-                contentType: false,
-                dataType: 'json',
-                success: function(resp) {
-                    if(resp.success) {
-                        $(modal_allergies_results).removeClass('fail');
-                        $(modal_allergies_results).modal('toggle');
+            $(document).on('click', '#modal_allergies #btn_update', function() {
+                let formData = new FormData($('#allergies')[0]);
+                formData.append('form_name', 'allergies');
+                formData.append('meta_type', 'list');
+                formData.append('user_id', <?php echo $user_id?>);
+                formData.append('action', 'update_form');
+                $.ajax({
+                    url: wp_admin_url,
+                    type: 'post',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function(resp) {
+                        if(resp.success) {
+                            $(modal_allergies_results).removeClass('fail');
+                            $(modal_allergies_results).modal('toggle');
 
-                        $(allergies_list).html(resp.html);
+                            $(allergies_list).html(resp.html);
+                        }
+                        else {
+                            $(modal_allergies_results).addClass('fail');
+                            $(modal_allergies_results).modal('toggle');
+                        }
+                        modal_allergies.toggle();
                     }
-                    else {
-                        $(modal_allergies_results).addClass('fail');
-                        $(modal_allergies_results).modal('toggle');
-                    }
-                    modal_allergies.toggle();
-                }
+                })
             })
-        })
 
-        var modal_allergies = new bootstrap.Modal(document.getElementById('modal_allergies'), {
-            keyboard: false
-        });
-        var $modal_allergies = $('#modal_allergies');
+            var modal_allergies = new bootstrap.Modal(document.getElementById('modal_allergies'), {
+                keyboard: false
+            });
+            var $modal_allergies = $('#modal_allergies');
 
-        $(document).on('click', '#sp_allergies #btn_add', function() {
-            $($modal_allergies).removeClass('edit');
-            $($modal_allergies).find('input').val('');
-            $($modal_allergies).find('select').val('');
-            $($modal_allergies).find('textarea').val('');
+            $(document).on('click', '#sp_allergies #btn_add', function() {
+                $($modal_allergies).removeClass('edit');
+                $($modal_allergies).find('input').val('');
+                $($modal_allergies).find('select').val('');
+                $($modal_allergies).find('textarea').val('');
 
-            modal_allergies.toggle();
-        })
-
-        $(document).on('click', '.allergy-edit-btn', function() {
-            var tr = $(this).parents('tr');
-
-            $($modal_allergies).addClass('edit');
-
-            $($modal_allergies).find('[name="type"]').val($(tr).find('.td-type').text().trim());
-            $($modal_allergies).find('[name="allergy"]').val($(tr).find('.td-allergy').text().trim());
-            $($modal_allergies).find('[name="severity"]').val($(tr).find('.td-severity').text().trim());
-            $($modal_allergies).find('[name="notes"]').val($(tr).find('.td-notes').text().trim());
-            $($modal_allergies).find('[name="list_index"]').val($(tr).attr('index'));
-
-            modal_allergies.toggle();
-        })
-
-        $(document).on('click', '.allergy-delete-btn', function() {
-            var tr = $(this).parents('tr');
-            $($modal_allergies).find('[name="list_index"]').val($(tr).attr('index'));
-            $(modal_allergies_confirm).modal('toggle');
-        })
-
-        $(document).on('click', '#modal_allergies_confirm_btn', function() {
-            $(modal_allergies_confirm).modal('toggle');
-
-            let formData = new FormData($('#allergies')[0]);
-            formData.append('form_name', 'allergies');
-            formData.append('meta_type', 'list');
-            formData.append('user_id', <?php echo $user_id?>);
-            formData.append('action', 'update_form');
-            formData.append('form_action', 'delete');
-            formData.append('list_count', allergies_list_count);
-            $.ajax({
-                url: wp_admin_url,
-                type: 'post',
-                data: formData,
-                processData: false,
-                contentType: false,
-                dataType: 'json',
-                success: function(resp) {
-                    if(resp.success) {
-                        $(modal_allergies_results).removeClass('fail');
-                        $(modal_allergies_results).modal('toggle');
-
-                        $(allergies_list).html(resp.html);
-
-                        allergies_list_count--;
-                    }
-                    else {
-                        $(modal_allergies_results).addClass('fail');
-                        $(modal_allergies_results).modal('toggle');
-                    }
-                }
+                modal_allergies.toggle();
             })
-        })
+
+            $(document).on('click', '.allergy-edit-btn', function() {
+                var tr = $(this).parents('tr');
+
+                $($modal_allergies).addClass('edit');
+
+                $($modal_allergies).find('[name="type"]').val($(tr).find('.td-type').text().trim());
+                $($modal_allergies).find('[name="allergy"]').val($(tr).find('.td-allergy').text().trim());
+                $($modal_allergies).find('[name="severity"]').val($(tr).find('.td-severity').text().trim());
+                $($modal_allergies).find('[name="notes"]').val($(tr).find('.td-notes').text().trim());
+                $($modal_allergies).find('[name="list_index"]').val($(tr).attr('index'));
+
+                modal_allergies.toggle();
+            })
+
+            $(document).on('click', '.allergy-delete-btn', function() {
+                var tr = $(this).parents('tr');
+                $($modal_allergies).find('[name="list_index"]').val($(tr).attr('index'));
+                $(modal_allergies_confirm).modal('toggle');
+            })
+
+            $(document).on('click', '#modal_allergies_confirm_btn', function() {
+                $(modal_allergies_confirm).modal('toggle');
+
+                let formData = new FormData($('#allergies')[0]);
+                formData.append('form_name', 'allergies');
+                formData.append('meta_type', 'list');
+                formData.append('user_id', <?php echo $user_id?>);
+                formData.append('action', 'update_form');
+                formData.append('form_action', 'delete');
+                formData.append('list_count', allergies_list_count);
+                $.ajax({
+                    url: wp_admin_url,
+                    type: 'post',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function(resp) {
+                        if(resp.success) {
+                            $(modal_allergies_results).removeClass('fail');
+                            $(modal_allergies_results).modal('toggle');
+
+                            $(allergies_list).html(resp.html);
+
+                            allergies_list_count--;
+                        }
+                        else {
+                            $(modal_allergies_results).addClass('fail');
+                            $(modal_allergies_results).modal('toggle');
+                        }
+                    }
+                })
+            })
+            <?php
+        }
+        else if($_SESSION['loginUser'] == 'FR') {
+            ?>
+            $('#allergies input').attr('disabled', true);
+            $('#allergies select').attr('disabled', true);
+            $('#allergies textarea').attr('disabled', true);
+
+            var modal_allergies = new bootstrap.Modal(document.getElementById('modal_allergies'), {
+                keyboard: false
+            });
+            var $modal_allergies = $('#modal_allergies');
+
+            $(document).on('click', '.allergy-view-btn', function() {
+                var tr = $(this).parents('tr');
+
+                $($modal_allergies).addClass('view');
+
+                $($modal_allergies).find('[name="type"]').val($(tr).find('.td-type').text().trim());
+                $($modal_allergies).find('[name="allergy"]').val($(tr).find('.td-allergy').text().trim());
+                $($modal_allergies).find('[name="severity"]').val($(tr).find('.td-severity').text().trim());
+                $($modal_allergies).find('[name="notes"]').val($(tr).find('.td-notes').text().trim());
+                $($modal_allergies).find('[name="list_index"]').val($(tr).attr('index'));
+
+                modal_allergies.toggle();
+            })
+
+            <?php
+        }
+        ?>
+        
 
     })(jQuery)
 </script>

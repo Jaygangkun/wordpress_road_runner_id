@@ -70,7 +70,7 @@ if (is_user_logged_in() && is_front_page()) {
 				<a class="page-header-nav-link" href="#">Activate ID</a>
 				<a class="page-header-nav-link" href="https://www.roadrunnerid.com/">Purchase</a>
 				<?php
-				if (is_user_logged_in()) {
+				if (is_user_logged_in() && $_SESSION['loginUser'] == 'CT') {
 					?>
 					<a class="page-header-nav-link" href="<?php echo get_permalink(get_page_by_path('account'))?>">My Account</a>
 					<?php

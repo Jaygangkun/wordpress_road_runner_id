@@ -254,52 +254,75 @@
                 </div>
             </div>
         </div>
-        <div class="text-end">
-            <span class="btn btn-blue" id="btn_save">Save</span>
-        </div>
+        <?php
+        if($_SESSION['loginUser'] == 'CT') {
+            ?>
+            <div class="text-end">
+                <span class="btn btn-blue" id="btn_save">Save</span>
+            </div>
+            <?php
+        }
+        ?>
     </form>
-    <div class="modal fade profile-results-modal" tabindex="-1" id="modal_personal_identification_results">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-success" role="alert">Success</div>
-                    <div class="alert alert-danger" role="alert">Failed</div>
+    <?php
+    if($_SESSION['loginUser'] == 'CT') {
+        ?>
+        <div class="modal fade profile-results-modal" tabindex="-1" id="modal_personal_identification_results">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-success" role="alert">Success</div>
+                        <div class="alert alert-danger" role="alert">Failed</div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        <?php
+    }
+    ?>
 </div>
 <script>
     (function($){
-        
-        var modal_personal_identification_results = $('#modal_personal_identification_results');
-
-        $(document).on('click', '#personal_identification #btn_save', function() {
-            let formData = new FormData($('#personal_identification')[0]);
-            formData.append('form_name', 'personal_identification');
-            formData.append('user_id', <?php echo $user_id?>);
-            formData.append('action', 'update_form');
-            $.ajax({
-                url: wp_admin_url,
-                type: 'post',
-                data: formData,
-                processData: false,
-                contentType: false,
-                dataType: 'json',
-                success: function(resp) {
-                    if(resp.success) {
-                        $(modal_personal_identification_results).removeClass('fail');
-                        $(modal_personal_identification_results).modal('toggle');
+        <?php
+        if($_SESSION['loginUser'] == 'FR') {
+            ?>
+            $('#personal_identification input').attr('disabled', true);
+            $('#personal_identification select').attr('disabled', true);
+            $('#personal_identification textarea').attr('disabled', true);
+            <?php
+        }
+        else if($_SESSION['loginUser'] == 'CT'){
+            ?>
+            var modal_personal_identification_results = $('#modal_personal_identification_results');
+            $(document).on('click', '#personal_identification #btn_save', function() {
+                let formData = new FormData($('#personal_identification')[0]);
+                formData.append('form_name', 'personal_identification');
+                formData.append('user_id', <?php echo $user_id?>);
+                formData.append('action', 'update_form');
+                $.ajax({
+                    url: wp_admin_url,
+                    type: 'post',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function(resp) {
+                        if(resp.success) {
+                            $(modal_personal_identification_results).removeClass('fail');
+                            $(modal_personal_identification_results).modal('toggle');
+                        }
+                        else {
+                            $(modal_personal_identification_results).addClass('fail');
+                            $(modal_personal_identification_results).modal('toggle');
+                        }
                     }
-                    else {
-                        $(modal_personal_identification_results).addClass('fail');
-                        $(modal_personal_identification_results).modal('toggle');
-                    }
-                }
+                })
             })
-        })
+            <?php
+        }
+        ?>
     })(jQuery)
 </script>

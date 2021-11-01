@@ -10,7 +10,7 @@ get_header();
             <div class="card-body">
                 <h2 class="card-title">Profile</h2>  
                 <div class="text-end">
-                    <a class="btn btn-blue" href="<?php echo get_permalink(get_page_by_path('account/profile'))?>">Edit Profile</a>
+                    <a class="btn btn-blue" href="<?php echo get_permalink(get_page_by_path('account/profile'))?>"><?php echo $_SESSION['loginUser'] == 'CT' ? "Edit Profile" : "View Profile" ?></a>
                 </div>
                 <div class="erp-list mt-3">
                     <div class="erp-row">
@@ -51,32 +51,38 @@ get_header();
                 </div>
             </div>
         </div>
-        <div class="card mt-3">
-            <div class="card-body">
-                <h2 class="card-title">Emergency IDs</h2>  
-                <div class="text-end">
-                    <button class="btn btn-blue" id="add_wristband_modal_btn">Add Emergency ID</button>
-                </div>
-                <div class="wristband-list mt-3">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">8 Digit Serial</th>
-                                <th scope="col">5-Digit Pin</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Date</th>
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="wristband_list">
-                            <?php
-                            showWristbands();
-                            ?>
-                        </tbody>
-                    </table>
+        <?php
+        if($_SESSION['loginUser'] == 'CT') {
+            ?>
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h2 class="card-title">Emergency IDs</h2>  
+                    <div class="text-end">
+                        <button class="btn btn-blue" id="add_wristband_modal_btn">Add Emergency ID</button>
+                    </div>
+                    <div class="wristband-list mt-3">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">8 Digit Serial</th>
+                                    <th scope="col">5-Digit Pin</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="wristband_list">
+                                <?php
+                                showWristbands();
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
+            <?php
+        }
+        ?>
     </div>
 </div>
 

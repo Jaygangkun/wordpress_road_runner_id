@@ -298,6 +298,7 @@ function showWristbands() {
 }
 
 function logOut() {
+	$_SESSION['loginUser'] = '';
 	wp_logout();
 	echo json_encode(array(
 		'logout' => true
@@ -328,6 +329,7 @@ function ajax_login_init(){
 }
 
 function responderLogin() {
+	$_SESSION['loginUser'] = '';
 	check_ajax_referer( 'ajax-login-nonce', 'security' );
 
 	$sn = isset($_POST['sn']) ? $_POST['sn'] : '';
@@ -362,6 +364,7 @@ function responderLogin() {
 			'loggedin' => true, 
 			'message' => __('Login successful, redirecting...')
 		));
+		$_SESSION['loginUser'] = 'FR';
 	}
 	else {
 		echo json_encode(array(
@@ -371,9 +374,9 @@ function responderLogin() {
 
 	die();
 }
-
+session_start();
 function customerLogin(){
-
+	$_SESSION['loginUser'] = '';
     // First check the nonce, if it fails the function will break
     check_ajax_referer( 'ajax-login-nonce', 'security' );
 
@@ -391,6 +394,7 @@ function customerLogin(){
 			'loggedin' => true, 
 			'message' => __('Login successful, redirecting...')
 		));
+		$_SESSION['loginUser'] = 'CT';
     }
 	else {
 		echo json_encode(array(
@@ -603,8 +607,19 @@ function loadEmergencyContacts($user_id) {
 				<?php echo getUserMetaListData($user_meta_data, 'emergency_contacts', 'phone', $index)?>
 			</td>
 			<td>
-				<a class="action-btn emergency-contact-btn emergency-contact-edit-btn text-blue">Edit</a>
-				<a class="action-btn emergency-contact-btn emergency-contact-delete-btn text-danger">Delete</a>
+				<?php
+				if($_SESSION['loginUser'] == 'CT') {
+					?>
+					<a class="action-btn emergency-contact-btn emergency-contact-edit-btn text-blue">Edit</a>
+					<a class="action-btn emergency-contact-btn emergency-contact-delete-btn text-danger">Delete</a>
+					<?php
+				}
+				else if($_SESSION['loginUser'] == 'FR') {
+					?>
+					<a class="action-btn emergency-contact-btn emergency-contact-view-btn text-blue">View</a>
+					<?php
+				}
+				?>
 			</td>
 		</tr>
 		<?php
@@ -628,8 +643,19 @@ function loadAllergies($user_id) {
 				<span class="td-notes" style="display:none"><?php echo getUserMetaListData($user_meta_data, 'allergies', 'notes', $index)?></span>
 			</td>
 			<td>
-				<a class="action-btn allergy-btn allergy-edit-btn text-blue">Edit</a>
-				<a class="action-btn allergy-btn allergy-delete-btn text-danger">Delete</a>
+				<?php
+				if($_SESSION['loginUser'] == 'CT') {
+					?>
+					<a class="action-btn allergy-btn allergy-edit-btn text-blue">Edit</a>
+					<a class="action-btn allergy-btn allergy-delete-btn text-danger">Delete</a>
+					<?php
+				}
+				else if($_SESSION['loginUser'] == 'FR') {
+					?>
+					<a class="action-btn allergy-btn allergy-view-btn text-blue">View</a>
+					<?php
+				}
+				?>
 			</td>
 		</tr>
 		<?php
@@ -658,8 +684,19 @@ function loadCurrentMedications($user_id) {
 				<span class="td-notes" style="display:none"><?php echo getUserMetaListData($user_meta_data, 'current_medications', 'notes', $index)?></span>
 			</td>
 			<td>
-				<a class="action-btn current-medication-btn current-medication-edit-btn text-blue">Edit</a>
-				<a class="action-btn current-medication-btn current-medication-delete-btn text-danger">Delete</a>
+				<?php
+				if($_SESSION['loginUser'] == 'CT') {
+					?>
+					<a class="action-btn current-medication-btn current-medication-edit-btn text-blue">Edit</a>
+					<a class="action-btn current-medication-btn current-medication-delete-btn text-danger">Delete</a>
+					<?php
+				}
+				else if($_SESSION['loginUser'] == 'FR') {
+					?>
+					<a class="action-btn current-medication-btn current-medication-view-btn text-blue">View</a>
+					<?php
+				}
+				?>
 			</td>
 		</tr>
 		<?php
@@ -680,8 +717,19 @@ function loadMedicalConditions($user_id) {
 				<span class="td-notes" style="display:none"><?php echo getUserMetaListData($user_meta_data, 'medical_conditions', 'notes', $index)?></span>
 			</td>
 			<td>
-				<a class="action-btn medical-condition-btn medical-condition-edit-btn text-blue">Edit</a>
-				<a class="action-btn medical-condition-btn medical-condition-delete-btn text-danger">Delete</a>
+				<?php
+				if($_SESSION['loginUser'] == 'CT') {
+					?>
+					<a class="action-btn medical-condition-btn medical-condition-edit-btn text-blue">Edit</a>
+					<a class="action-btn medical-condition-btn medical-condition-delete-btn text-danger">Delete</a>
+					<?php
+				}
+				else if($_SESSION['loginUser'] == 'FR') {
+					?>
+					<a class="action-btn medical-condition-btn medical-condition-view-btn text-blue">View</a>
+					<?php
+				}
+				?>
 			</td>
 		</tr>
 		<?php
@@ -704,8 +752,19 @@ function loadInsurances($user_id) {
 				<span class="td-additional" style="display:none"><?php echo getUserMetaListData($user_meta_data, 'insurance', 'additional', $index)?></span>
 			</td>
 			<td>
-				<a class="action-btn insurance-btn insurance-edit-btn text-blue">Edit</a>
-				<a class="action-btn insurance-btn insurance-delete-btn text-danger">Delete</a>
+				<?php
+				if($_SESSION['loginUser'] == 'CT') {
+					?>
+					<a class="action-btn insurance-btn insurance-edit-btn text-blue">Edit</a>
+					<a class="action-btn insurance-btn insurance-delete-btn text-danger">Delete</a>
+					<?php
+				}
+				else if($_SESSION['loginUser'] == 'FR') {
+					?>
+					<a class="action-btn insurance-btn insurance-view-btn text-blue">View</a>
+					<?php
+				}
+				?>
 			</td>
 		</tr>
 		<?php
@@ -735,8 +794,19 @@ function loadPhysicians($user_id) {
 				<?php echo getUserMetaListData($user_meta_data, 'physicians', 'email', $index)?>
 			</td>
 			<td>
-				<a class="action-btn physician-btn physician-edit-btn text-blue">Edit</a>
-				<a class="action-btn physician-btn physician-delete-btn text-danger">Delete</a>
+				<?php
+				if($_SESSION['loginUser'] == 'CT') {
+					?>
+					<a class="action-btn physician-btn physician-edit-btn text-blue">Edit</a>
+					<a class="action-btn physician-btn physician-delete-btn text-danger">Delete</a>
+					<?php
+				}
+				else if($_SESSION['loginUser'] == 'FR') {
+					?>
+					<a class="action-btn physician-btn physician-view-btn text-blue">View</a>
+					<?php
+				}
+				?>
 			</td>
 		</tr>
 		<?php
