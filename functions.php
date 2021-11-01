@@ -822,4 +822,62 @@ function getUserMetaListData($meta, $form_name, $field_name, $index) {
 	$meta_field_name = $form_name.'_list_'.$index."_".$field_name;
 	return isset($meta[$meta_field_name]) ? $meta[$meta_field_name][0] : '';
 }
+
+function report() {
+	$resp = array(
+		'success' => false
+	);
+
+	$sn = isset($_POST['sn']) ? $_POST['sn'] : '';
+	$pin = isset($_POST['pin']) ? $_POST['pin'] : '';
+	$status = isset($_POST['status']) ? $_POST['status'] : '';
+	$date = isset($_POST['date']) ? $_POST['date'] : '';
+
+	if($status == '') {
+		$resp['message'] = 'No Reason';
+	}
+	else {
+		$users = get_users( array( 'role__in' => array( 'subscriber' ) ) );
+		$found_wristband = null;
+		// Array of WP_User objects.
+		foreach ( $users as $user ) {
+			$wristbands = get_posts(array(
+				'post_type' => 'wristband',
+				'numberposts' => -1,
+				'author' => $user->ID,
+				'post_status' => array('private')
+			));
+			
+			foreach($wristbands as $wristband) {
+				$wristband_sn = get_field('sn', $wristband->ID);
+				$wristband_pin = get_field('pin', $wristband->ID);
+	
+				if ($wristband_sn == $sn && $wristband_pin == $pin) {
+					$found_wristband = $wristband;
+					break;
+				}
+			}
+		}
+
+		if($found_wristband) {
+			wp_update_post(array(
+				'ID' => $_POST['wristband_id'],
+				'post_title' => $sn.'-'.$pin,
+			));
+	
+			update_post_meta($found_wristband->ID, 'status', $status);
+			update_post_meta($found_wristband->ID, 'date', $date);
+			$resp['success'] = true;
+		}
+		else {
+			$resp['message'] = 'No Found ID';
+		}
+	}
+
+	echo json_encode($resp);
+	die();
+}
+
+add_action('wp_ajax_report', 'report');
+add_action('wp_ajax_nopriv_report', 'report');
 ?>

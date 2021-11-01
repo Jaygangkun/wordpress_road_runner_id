@@ -67,7 +67,13 @@ if (is_user_logged_in() && is_front_page()) {
 				<img class="page-header-logo__img" src="<?php echo get_template_directory_uri()?>/library/images/rrid-logo.jpg" alt="Logo Image">
 			</a>
 			<div class="page-header-nav">
-				<a class="page-header-nav-link" href="#">Activate ID</a>
+				<?php
+				if (!is_user_logged_in()) {
+					?>
+					<a class="page-header-nav-link" href="<?php echo get_permalink(get_page_by_path('report'))?>">Report ID</a>
+					<?php
+				}
+				?>
 				<a class="page-header-nav-link" href="https://www.roadrunnerid.com/">Purchase</a>
 				<?php
 				if (is_user_logged_in() && $_SESSION['loginUser'] == 'CT') {
