@@ -120,8 +120,8 @@ get_header();
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="wristband_add_btn">Add</button>
-                <button type="button" class="btn btn-primary" id="wristband_update_btn">Update</button>
+                <button type="button" class="btn btn-blue" id="wristband_add_btn">Add</button>
+                <button type="button" class="btn btn-blue" id="wristband_update_btn">Update</button>
             </div>
         </div>
     </div>

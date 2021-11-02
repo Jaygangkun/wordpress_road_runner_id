@@ -5,7 +5,7 @@ get_header();
 ?>
 
 <div class="page-home-content">
-    <div class="row my-5">
+    <div class="row mt-5">
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-body">
@@ -46,6 +46,11 @@ get_header();
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="row mt-3 mb-5">
+        <div class="col-lg-12 text-center">
+            <a class="text-blue" href="<?php echo get_permalink(get_page_by_path('register'))?>">Not account? Register</a>
         </div>
     </div>
 </div>

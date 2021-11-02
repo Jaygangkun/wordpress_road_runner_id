@@ -4,7 +4,7 @@ get_header();
 
 ?>
 
-<div class="page-home-content">
+<div class="page-report-content">
     <div class="row my-5">
         <div class="col-lg-6 mx-auto">
             <div class="card">

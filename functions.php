@@ -880,4 +880,42 @@ function report() {
 
 add_action('wp_ajax_report', 'report');
 add_action('wp_ajax_nopriv_report', 'report');
+
+function register() {
+	$resp = array(
+		'success' => false
+	);
+
+	$username = isset($_POST['username']) ? $_POST['username'] : '';
+	$email = isset($_POST['email']) ? $_POST['email'] : '';
+	$password = isset($_POST['password']) ? $_POST['password'] : '';
+	
+	if($username == '' || $email == '' || $password == '') {
+		$resp['message'] = 'No Username or Email or Password';
+	}
+	else {
+		if(username_exists($username)) {
+			$resp['message'] = 'Username already exists';
+		}
+		else if(email_exists($email)) {
+			$resp['message'] = 'Email already exists';
+		}
+		else {
+			$user_id = wp_create_user($username, $password, $email);
+
+			if(!is_wp_error($user_id)) {
+				$user = new WP_User($user_id);
+				$user->set_role('subscriber');
+			}
+
+			$resp['success'] = true;
+		}
+	}
+
+	echo json_encode($resp);
+	die();
+}
+
+add_action('wp_ajax_register', 'register');
+add_action('wp_ajax_nopriv_register', 'register');
 ?>
