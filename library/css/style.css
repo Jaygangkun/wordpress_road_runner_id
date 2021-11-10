@@ -710,3 +710,7 @@ body {
   margin-bottom: 20px;
   border: 1px solid black;
 }
+
+#wpadminbar {
+  display: none;
+}

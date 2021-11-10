@@ -12,7 +12,8 @@
         }
         ?>
         <?php
-        $img_url = get_avatar_url($user_id);
+        // $img_url = get_avatar_url($user_id);
+        $img_url = get_template_directory_uri()."/library/images/erp-no-image.png";
         $img_id = getUserMetaData($user_meta_data, 'profile_photo', 'image');
         if( $img_id != '') {
             $img_url = wp_get_attachment_url($img_id);

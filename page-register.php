@@ -25,7 +25,7 @@ get_header();
                         <input type="password" class="form-control" id="password" placeholder="">
                     </div>
                     <div class="mt-3">
-                        <button type="submit" class="btn btn-blue w-100" id="register_btn">Report</button>
+                        <button type="submit" class="btn btn-blue w-100" id="register_btn">Register</button>
                     </div>
                 </div>
             </div>

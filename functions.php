@@ -374,7 +374,23 @@ function responderLogin() {
 
 	die();
 }
-session_start();
+// session_start();
+// $_SESSION['loginUser'] = 'CT';
+add_action('init', 'cyb_start_session', 1);
+add_action('wp_logout', 'cyb_end_session');
+// add_action('wp_login', 'cyb_end_session');
+
+function cyb_start_session() {
+    if( ! session_id() ) {
+        session_start();
+        // now you can load your library that use $_SESSION
+    }
+}
+
+function cyb_end_session() {
+    session_destroy();
+}
+
 function customerLogin(){
 	$_SESSION['loginUser'] = '';
     // First check the nonce, if it fails the function will break

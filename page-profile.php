@@ -48,16 +48,16 @@ $user_meta_data = get_user_meta($user_id);
                 </div>
                 <div class="col-lg-8">
                     <div class="mt-3">
-                        <?php include('/profile-sub-pages/personal_identification.php')?>
-                        <?php include('/profile-sub-pages/emergency_contacts.php')?>
-                        <?php include('/profile-sub-pages/allergies.php')?>
-                        <?php include('/profile-sub-pages/current_medications.php')?>
-                        <?php include('/profile-sub-pages/medical_conditions.php')?>
-                        <?php include('/profile-sub-pages/medical_history.php')?>
-                        <?php include('/profile-sub-pages/insurance.php')?>
-                        <?php include('/profile-sub-pages/physicians.php')?>
-                        <?php include('/profile-sub-pages/addresses.php')?>
-                        <?php include('/profile-sub-pages/profile_photo.php')?>
+                        <?php include('profile-sub-pages/personal_identification.php')?>
+                        <?php include('profile-sub-pages/emergency_contacts.php')?>
+                        <?php include('profile-sub-pages/allergies.php')?>
+                        <?php include('profile-sub-pages/current_medications.php')?>
+                        <?php include('profile-sub-pages/medical_conditions.php')?>
+                        <?php include('profile-sub-pages/medical_history.php')?>
+                        <?php include('profile-sub-pages/insurance.php')?>
+                        <?php include('profile-sub-pages/physicians.php')?>
+                        <?php include('profile-sub-pages/addresses.php')?>
+                        <?php include('profile-sub-pages/profile_photo.php')?>
                     </div>
                 </div>
             </div>
