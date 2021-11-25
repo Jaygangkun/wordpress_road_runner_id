@@ -8,7 +8,7 @@ get_header();
     <div class="my-5">
         <div class="card mt-3">
             <div class="card-body">
-                <h2 class="card-title">Profile</h2>  
+                <h2 class="card-title">Profile</h2>
                 <div class="text-end">
                     <a class="btn btn-blue" href="<?php echo get_permalink(get_page_by_path('account/profile'))?>"><?php echo $_SESSION['loginUser'] == 'CT' ? "Edit Profile" : "View Profile" ?></a>
                 </div>
@@ -40,11 +40,11 @@ get_header();
                                 </div>
                                 <div class="erp-info-row">
                                     <span class="erp-info__title">Ethnicity:</span>
-                                    <span class="erp-info__value"><?php echo getUserMetaData($user_meta_data, 'personal_identification', 'organ_donor')?></span>
+                                    <span class="erp-info__value"><?php echo getUserMetaData($user_meta_data, 'personal_identification', 'ethnicity')?></span>
                                 </div>
                                 <div class="erp-info-row">
                                     <span class="erp-info__title">Organ Donor:</span>
-                                    <span class="erp-info__value"><?php echo getUserMetaData($user_meta_data, 'personal_identification', 'ethnicity')?></span>
+                                    <span class="erp-info__value"><?php echo getUserMetaData($user_meta_data, 'personal_identification', 'organ_donor')?></span>
                                 </div>
                             </div>
                         </div>
@@ -59,7 +59,7 @@ get_header();
                 <div class="card-body">
                     <h2 class="card-title">Emergency IDs</h2>  
                     <div class="text-end">
-                        <button class="btn btn-blue" id="add_wristband_modal_btn">Add Emergency ID</button>
+                        <button class="btn btn-blue" id="add_wristband_modal_btn" style="display: none">Add Emergency ID</button>
                     </div>
                     <div class="wristband-list mt-3">
                         <table class="table">
@@ -145,6 +145,19 @@ get_header();
 </div>
 <script>
     jQuery(document).ready(function(){
+
+        function checkWristbandCanAdd() {
+            var wristbands_count = jQuery('#wristband_list tr').length;
+            if(wristbands_count >= MAX_WRIST_BANDS) {
+                jQuery('#add_wristband_modal_btn').hide();
+            }
+            else {
+                jQuery('#add_wristband_modal_btn').show();
+            }
+        }
+        
+        checkWristbandCanAdd();
+        
         jQuery(".boostrap-datepicker").datetimepicker({
             format: 'yyyy-mm-dd hh:ii:ss',
             autoclose: true,
@@ -180,8 +193,12 @@ get_header();
                 success: function(resp) {
                     if(resp.success) {
                         jQuery('#wristband_list').html(resp.html);
+                        checkWristbandCanAdd();
+                        jQuery(wristband_modal).modal('toggle');
                     }
-                    jQuery(wristband_modal).modal('toggle');
+                    else {
+                        alert(resp.message);
+                    }
                 }
             })
         })
@@ -218,9 +235,12 @@ get_header();
                 success: function(resp) {
                     if(resp.success) {
                         jQuery('#wristband_list').html(resp.html);
+                        checkWristbandCanAdd();
+                        jQuery(wristband_modal).modal('toggle');
                     }
-
-                    jQuery(wristband_modal).modal('toggle');
+                    else {
+                        alert(resp.message);
+                    }
                 }
             })
         })
@@ -245,6 +265,7 @@ get_header();
                 success: function(resp) {
                     if(resp.success) {
                         jQuery('#wristband_list').html(resp.html);
+                        checkWristbandCanAdd();
                     }
 
                     jQuery(wristband_confirm_modal).modal('toggle');

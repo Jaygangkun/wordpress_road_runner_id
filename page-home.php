@@ -10,6 +10,7 @@ get_header();
             <div class="card">
                 <div class="card-body">
                     <h2 class="card-title">FIRST RESPONDER LOGIN</h2>
+                    <p class="text-danger">See Back of ID Tag</p>
                     <div class="alert alert-danger" role="alert" id="responder_login_alert_fail" style="display: none">Fail to login</div>
                     <div class="alert alert-success" role="alert" id="responder_login_alert_success" style="display: none">Success to login</div>
                     <div class="mt-3">
@@ -30,6 +31,7 @@ get_header();
             <div class="card">
                 <div class="card-body">
                     <h2 class="card-title">CUSTOMER LOGIN</h2>
+                    <p class="text-danger">&nbsp;</p>
                     <div class="alert alert-danger" role="alert" id="customer_login_alert_fail" style="display: none">Fail to login</div>
                     <div class="alert alert-success" role="alert" id="customer_login_alert_success" style="display: none">Success to login</div>
                     <div class="mt-3">
@@ -50,7 +52,10 @@ get_header();
     </div>
     <div class="row mt-3 mb-5">
         <div class="col-lg-12 text-center">
-            <a class="text-blue" href="<?php echo get_permalink(get_page_by_path('register'))?>">Not account? Register</a>
+            <a class="text-blue" href="<?php echo get_permalink(get_page_by_path('register'))?>">Register</a>
+        </div>
+        <div class="col-lg-12 text-center">
+            <a class="text-blue" href="<?php echo get_permalink(get_page_by_path('reset-password'))?>">Reset Password</a>
         </div>
     </div>
 </div>

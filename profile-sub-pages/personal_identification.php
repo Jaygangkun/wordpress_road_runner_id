@@ -148,32 +148,12 @@
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label for="height" class="form-label">Height</label>
-                    <select class="form-select" aria-label="" name="height">
-                        <option value="">-- Select --</option>
-                        <?php
-                        $m_height = getUserMetaData($user_meta_data, 'personal_identification', 'height');
-                        foreach($const_heights as $height) {
-                            ?>
-                            <option <?php echo $m_height == $height ? "selected" : "" ?> value="<?php echo $height?>"><?php echo $height?></option>
-                            <?php
-                        }
-                        ?>
-                    </select>
+                    <label for="height" class="form-label">Height(in)</label>
+                    <input type="text" class="form-control" name="height" aria-describedby="height" value="<?php echo getUserMetaData($user_meta_data, 'personal_identification', 'height')?>">
                 </div>
                 <div class="mb-3">
-                    <label for="weight" class="form-label">Weight</label>
-                    <select class="form-select" aria-label="" name="weight">
-                        <option value="">-- Select --</option>
-                        <?php
-                        $m_weight = getUserMetaData($user_meta_data, 'personal_identification', 'weight');
-                        foreach($const_weights as $weight) {
-                            ?>
-                            <option <?php echo $m_weight == $weight ? "selected" : "" ?> value="<?php echo $weight?>"><?php echo $weight?></option>
-                            <?php
-                        }
-                        ?>
-                    </select>
+                    <label for="weight" class="form-label">Weight(lbs)</label>
+                    <input type="text" class="form-control" name="weight" aria-describedby="weight" value="<?php echo getUserMetaData($user_meta_data, 'personal_identification', 'weight')?>">
                 </div>
                 <div class="mb-3">
                     <label for="hair_color" class="form-label">Hair Color</label>

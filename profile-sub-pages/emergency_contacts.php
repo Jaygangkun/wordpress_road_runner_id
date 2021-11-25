@@ -6,7 +6,7 @@
     if($_SESSION['loginUser'] == 'CT') {
         ?>
         <div class="text-end">
-            <span class="btn btn-blue" id="btn_add">Add</span>
+            <span class="btn btn-blue" id="btn_add" style="display: none">Add</span>
         </div>
         <?php
     }
@@ -131,6 +131,19 @@
         <?php
         if($_SESSION['loginUser'] == 'CT') {
             ?>
+            var MAX_EMERGENCY_CONTACTS = <?php echo MAX_EMERGENCY_CONTACTS?>;
+            function checkEmergencyContactCanAdd() {
+                var emergency_contacts_count = jQuery('#emergency_contacts_list tr').length;
+                if(emergency_contacts_count >= MAX_EMERGENCY_CONTACTS) {
+                    jQuery('#btn_add').hide();
+                }
+                else {
+                    jQuery('#btn_add').show();
+                }
+            }
+            
+            checkEmergencyContactCanAdd();
+            
             var emergency_contacts_list_count = <?php echo getUserMetaData($user_meta_data, 'emergency_contacts', 'list') == '' ? 0 : getUserMetaData($user_meta_data, 'emergency_contacts', 'list') ?>;
 
             var emergency_contacts_list = $('#emergency_contacts_list');
@@ -160,6 +173,7 @@
                             
                             $(emergency_contacts_list).html(resp.html);
                             emergency_contacts_list_count++;
+                            checkEmergencyContactCanAdd();
                         }
                         else {
                             $(modal_emergency_contacts_results).addClass('fail');
@@ -189,6 +203,7 @@
                             $(modal_emergency_contacts_results).modal('toggle');
 
                             $(emergency_contacts_list).html(resp.html);
+                            checkEmergencyContactCanAdd();
                         }
                         else {
                             $(modal_emergency_contacts_results).addClass('fail');
@@ -260,6 +275,7 @@
                             $(emergency_contacts_list).html(resp.html);
 
                             emergency_contacts_list_count--;
+                            checkEmergencyContactCanAdd();
                         }
                         else {
                             $(modal_emergency_contacts_results).addClass('fail');

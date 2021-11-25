@@ -151,6 +151,33 @@ if( function_exists('acf_add_options_page') ) {
 
 include('constants.php');
 
+function existWristbandID($data) {
+	$sn = isset($data['sn']) ? $data['sn'] : '';
+	$pin = isset($data['pin']) ? $data['pin'] : '';
+
+	$users = get_users( array( 'role__in' => array( 'subscriber' ) ) );
+	// Array of WP_User objects.
+	foreach ( $users as $user ) {
+		$wristbands = get_posts(array(
+			'post_type' => 'wristband',
+			'numberposts' => -1,
+			'author' => $user->ID,
+			'post_status' => array('private')
+		));
+		
+		foreach($wristbands as $wristband) {
+			$wristband_sn = get_post_meta($wristband->ID, 'sn', true);
+			$wristband_pin = get_post_meta($wristband->ID, 'pin', true);
+
+			if ($wristband_sn == $sn && $wristband_pin == $pin) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
 function addWristband() {
 	$user = wp_get_current_user();
 
@@ -163,6 +190,12 @@ function addWristband() {
 	$status = isset($_POST['status']) ? $_POST['status'] : '';
 	$date = isset($_POST['date']) ? $_POST['date'] : '';
 
+	if (existWristbandID(array('sn' => $sn, 'pin' => $pin))) {
+		$resp['message'] = 'Wristband already exists!';
+		echo json_encode($resp);
+		die();
+	}
+	
 	$wristband_id = wp_insert_post(array (
 		'post_type' => 'wristband',
 		'post_title' => $sn.'-'.$pin,
@@ -204,6 +237,12 @@ function updateWristband() {
 	$pin = isset($_POST['pin']) ? $_POST['pin'] : '';
 	$status = isset($_POST['status']) ? $_POST['status'] : '';
 	$date = isset($_POST['date']) ? $_POST['date'] : '';
+
+	if (existWristbandID(array('sn' => $sn, 'pin' => $pin))) {
+		$resp['message'] = 'Wristband already exists!';
+		echo json_encode($resp);
+		die();
+	}
 
 	if ($wristband_id != '') {
 		wp_update_post(array(
@@ -518,6 +557,10 @@ function updateForm() {
 				loadPhysicians($_POST['user_id']);
 			}
 
+			if($_POST['form_name'] == 'security_questions') {
+				loadSecurityQuestions($_POST['user_id']);
+			}
+
 			$html = ob_get_contents();
 			ob_end_clean();
 			$resp['html'] = $html;
@@ -829,6 +872,38 @@ function loadPhysicians($user_id) {
 	}
 }
 
+function loadSecurityQuestions($user_id) {
+	$user_meta_data = get_user_meta($user_id);
+	$list_count = (int)getUserMetaData($user_meta_data, 'security_questions', 'list');
+	for($index = 0; $index < $list_count; $index ++) {
+		?>
+		<tr index="<?php echo $index?>">
+			<td class="td-question">
+				<?php echo getUserMetaListData($user_meta_data, 'security_questions', 'question', $index)?>
+			</td>
+			<td class="td-answer">
+				<?php echo getUserMetaListData($user_meta_data, 'security_questions', 'answer', $index)?>
+			</td>
+			<td>
+				<?php
+				if($_SESSION['loginUser'] == 'CT') {
+					?>
+					<a class="action-btn security-question-btn security-question-edit-btn text-blue">Edit</a>
+					<a class="action-btn security-question-btn security-question-delete-btn text-danger">Delete</a>
+					<?php
+				}
+				else if($_SESSION['loginUser'] == 'FR') {
+					?>
+					<a class="action-btn security-question-btn security-question-view-btn text-blue">View</a>
+					<?php
+				}
+				?>
+			</td>
+		</tr>
+		<?php
+	}
+}
+
 function getUserMetaData($meta, $form_name, $field_name) {
 	$meta_field_name = $form_name.'_'.$field_name;
 	return isset($meta[$meta_field_name]) ? $meta[$meta_field_name][0] : '';
@@ -934,4 +1009,166 @@ function register() {
 
 add_action('wp_ajax_register', 'register');
 add_action('wp_ajax_nopriv_register', 'register');
+
+function slugify($text, $divider = '-')
+{
+  // replace non letter or digits by divider
+  $text = preg_replace('~[^\pL\d]+~u', $divider, $text);
+
+  // transliterate
+  $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+
+  // remove unwanted characters
+  $text = preg_replace('~[^-\w]+~', '', $text);
+
+  // trim
+  $text = trim($text, $divider);
+
+  // remove duplicate divider
+  $text = preg_replace('~-+~', $divider, $text);
+
+  // lowercase
+  $text = strtolower($text);
+
+  if (empty($text)) {
+    return 'n-a';
+  }
+
+  return $text;
+}
+
+function renderSecurityQuestionsAdded() {
+	$user_meta_data = get_user_meta(get_current_user_id());
+	$list_count = (int)getUserMetaData($user_meta_data, 'security_questions', 'list');
+	for($index = 0; $index < $list_count; $index ++) {
+		$question = getUserMetaListData($user_meta_data, 'security_questions', 'question', $index);
+		?>
+		<div class="mt-3">
+			<label for="question_<?php echo $index?>" class="form-label"><?php echo $question?></label>
+			<input type="text" class="form-control" id="question_<?php echo $index?>" placeholder="">
+		</div>
+		<?php
+	}
+}
+
+function resetPwCheckUser() {
+	$resp = array(
+		'success' => false
+	);
+
+	$email = isset($_POST['email']) ? $_POST['email'] : '';
+
+	if($email != '') {
+		$user = get_user_by('email', $email);
+
+		if(!$user) {
+			$resp['message'] = 'Not find user';	
+		}
+		else {
+			$resp['user_id'] = $user->ID;
+			$questions = array();
+			$user_meta_data = get_user_meta($user->ID);
+			$list_count = (int)getUserMetaData($user_meta_data, 'security_questions', 'list');
+			for($index = 0; $index < $list_count; $index ++) {
+				$questions[] = getUserMetaListData($user_meta_data, 'security_questions', 'question', $index);
+			}
+			$resp['questions'] = $questions;
+
+			$resp['success'] = true;
+		}
+	}
+	else {
+		$resp['message'] = 'Email is empty';
+	}
+
+	echo json_encode($resp);
+	die();
+}
+
+add_action('wp_ajax_reset_pw_check_user', 'resetPwCheckUser');
+add_action('wp_ajax_nopriv_reset_pw_check_user', 'resetPwCheckUser');
+
+function checkSecurityQuestionAnswers() {
+	$resp = array(
+		'success' => false
+	);
+
+	$user_id = isset($_POST['user_id']) ? $_POST['user_id'] : null;
+	$data = isset($_POST['data']) ? $_POST['data'] : null;
+
+	if($user_id && $data) {
+		$user_meta_data = get_user_meta($user_id);
+		$list_count = (int)getUserMetaData($user_meta_data, 'security_questions', 'list');
+
+		$questions = array();
+		for($index = 0; $index < $list_count; $index ++) {
+			$questions[] = array(
+				'question' => getUserMetaListData($user_meta_data, 'security_questions', 'question', $index),
+				'answer' => getUserMetaListData($user_meta_data, 'security_questions', 'answer', $index)
+			);
+		}
+
+		$qa_match = true;
+		foreach($data as $qa) {
+			$question_index = $qa['question_index'];
+			if($question_index < count($questions)) {
+				if($questions[$question_index]['answer'] != $qa['answer']) {
+					$qa_match = false;
+				}
+			}
+			else {
+				$qa_match = false;
+			}
+		}
+
+		if($qa_match) {
+			$resp['success'] = true;
+		}
+		else {
+			$resp['message'] = 'Answers are incorrect.';	
+		}
+	}
+	else {
+		$resp['message'] = 'No user id or answers data';
+	}
+
+	echo json_encode($resp);
+	die();
+}
+
+add_action('wp_ajax_check_security_question_answers', 'checkSecurityQuestionAnswers');
+add_action('wp_ajax_nopriv_check_security_question_answers', 'checkSecurityQuestionAnswers');
+
+function resetUserPassword() {
+	$resp = array(
+		'success' => false
+	);
+
+	$user_id = isset($_POST['user_id']) ? $_POST['user_id'] : null;
+	$password = isset($_POST['password']) ? $_POST['password'] : null;
+
+	if($user_id && $password) {
+		$user = get_user_by('ID', $user_id);
+		if($user) {
+			reset_password($user, $password);
+			$resp['success'] = true;
+		}
+		else {
+			$resp['message'] = 'No found user';	
+		}
+	}
+	else {
+		$resp['message'] = 'No user id or empty password';
+	}
+
+	echo json_encode($resp);
+	die();
+}
+
+add_action('wp_ajax_reset_user_password', 'resetUserPassword');
+add_action('wp_ajax_nopriv_reset_user_password', 'resetUserPassword');
+
+
+define ('MAX_WRIST_BANDS', 5);
+define ('MAX_EMERGENCY_CONTACTS', 3);
 ?>

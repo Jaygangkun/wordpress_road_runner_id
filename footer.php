@@ -1,5 +1,5 @@
 					<footer class="footer text-center" role="contentinfo">
-						<p class="footer-copyright-text">©2021 ROAD RUNNER ID. All Rights Reserved. By C2 Digital.</p>
+						<p class="footer-copyright-text">©2021 ROAD RUNNER ID. All Rights Reserved.</p>
 				
 					</footer> <!-- end footer -->
 				</div><!-- page-content -->

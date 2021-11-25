@@ -57,6 +57,7 @@ if (is_user_logged_in() && is_front_page()) {
 			var wp_admin_url = '<?php echo admin_url('admin-ajax.php')?>';
 			var login_redirecturl = '<?php echo get_permalink(get_page_by_path('account'))?>';
 			var logout_redirecturl = '<?php echo get_home_url()?>';
+			var MAX_WRIST_BANDS = <?php echo MAX_WRIST_BANDS?>
 		</script>
 	</head>
 
@@ -67,10 +68,11 @@ if (is_user_logged_in() && is_front_page()) {
 				<img class="page-header-logo__img" src="<?php echo get_template_directory_uri()?>/library/images/rrid-logo.jpg" alt="Logo Image">
 			</a>
 			<div class="page-header-nav">
+				<a class="page-header-nav-link" href="<?php echo get_home_url()?>">Home</a>
 				<?php
 				if (!is_user_logged_in()) {
 					?>
-					<a class="page-header-nav-link" href="<?php echo get_permalink(get_page_by_path('report'))?>">Report ID</a>
+					<a class="page-header-nav-link" href="<?php echo get_permalink(get_page_by_path('report'))?>">Report Lost ID</a>
 					<?php
 				}
 				?>
