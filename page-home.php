@@ -50,12 +50,18 @@ get_header();
             </div>
         </div>
     </div>
-    <div class="row mt-3 mb-5">
+    <div class="row mt-3">
         <div class="col-lg-12 text-center">
             <a class="text-blue" href="<?php echo get_permalink(get_page_by_path('register'))?>">Register</a>
         </div>
         <div class="col-lg-12 text-center">
             <a class="text-blue" href="<?php echo get_permalink(get_page_by_path('reset-password'))?>">Reset Password</a>
+        </div>
+    </div>
+
+    <div class="row mt-5 mb-5">
+        <div class="col-lg-12 text-center">
+            <a class="text-blue" href="<?php echo get_permalink(get_page_by_path('privacy-policy'))?>">Privacy Policy</a>
         </div>
     </div>
 </div>
