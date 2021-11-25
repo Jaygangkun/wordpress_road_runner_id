@@ -1168,6 +1168,12 @@ function resetUserPassword() {
 add_action('wp_ajax_reset_user_password', 'resetUserPassword');
 add_action('wp_ajax_nopriv_reset_user_password', 'resetUserPassword');
 
+function myroadid_change_cookie_logout( $expiration){
+    
+    return 5 * 60;
+}
+ 
+add_filter( 'auth_cookie_expiration','myroadid_change_cookie_logout', 10, 3 );
 
 define ('MAX_WRIST_BANDS', 5);
 define ('MAX_EMERGENCY_CONTACTS', 3);
