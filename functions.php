@@ -449,6 +449,14 @@ function customerLogin(){
 			'loggedin' => true, 
 			'message' => __('Login successful, redirecting...')
 		));
+
+		$to = $user_signon->email;
+		$subject = 'MYRRID Login';
+		$body = 'Your MyRRID Profile has been logged in to, if it was not you please deactivate your e-ID immediately.';
+		$headers = array('Content-Type: text/html; charset=UTF-8');
+		
+		wp_mail( $to, $subject, $body, $headers );
+
 		$_SESSION['loginUser'] = 'CT';
     }
 	else {
