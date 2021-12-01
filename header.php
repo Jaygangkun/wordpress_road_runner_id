@@ -3,8 +3,20 @@ if (is_user_logged_in() && is_front_page()) {
 	wp_redirect(get_permalink(get_page_by_path('account')));
 }
 
-if(!is_user_logged_in() && !is_front_page()) {
-	wp_redirect(get_home_url());
+$page_slug = get_queried_object()->post_name;
+if(!is_user_logged_in()) {
+	switch($page_slug) {
+		case 'home':
+		case 'register':
+		case 'reset-password':
+		case 'faq':
+		case 'privacy-policy':
+		case 'report':
+			break;
+		default: 
+			wp_redirect(get_home_url());
+			break;
+	}
 }
 ?>
 <!doctype html>
