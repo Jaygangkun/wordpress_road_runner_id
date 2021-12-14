@@ -103,6 +103,14 @@
                         </div>
                     </div>
                 </div>
+                <div class="mb-3">
+                    <label for="ice1" class="form-label">ICE 1</label>
+                    <input type="text" class="form-control" name="ice1" aria-describedby="ice1" value="<?php echo getUserMetaData($user_meta_data, 'personal_identification', 'ice1')?>">
+                </div>
+                <div class="mb-3">
+                    <label for="ice1" class="form-label">ICE 2</label>
+                    <input type="text" class="form-control" name="ice2" aria-describedby="ice2" value="<?php echo getUserMetaData($user_meta_data, 'personal_identification', 'ice2')?>">
+                </div>
             </div>
             <div class="tab-pane fade" id="nav_phy_info" role="tabpanel" aria-labelledby="">
                 <div class="mb-3">

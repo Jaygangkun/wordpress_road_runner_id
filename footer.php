@@ -1,8 +1,14 @@
-					<footer class="footer text-center" role="contentinfo">
-						<p class="footer-copyright-text">©2021 ROAD RUNNER ID. All Rights Reserved.</p>
+
+				<footer class="footer text-center" role="contentinfo">
+					<div class="row">
+						<div class="col-lg-12 text-center">
+							<a class="text-white" href="<?php echo get_permalink(get_page_by_path('privacy-policy'))?>">Privacy Policy</a>
+						</div>
+					</div>
+					<p class="footer-copyright-text">©2021 ROAD RUNNER ID. All Rights Reserved.</p>
+			
+				</footer> <!-- end footer -->
 				
-					</footer> <!-- end footer -->
-				</div><!-- page-content -->
 			</div><!-- page-content-container -->
 		
 		</div> <!-- end #container -->

@@ -44,6 +44,9 @@ $user_meta_data = get_user_meta($user_id);
                         <li class="list-group-item">
                             <span class="btn profile-sub-page-link" sub-page-target="#sp_profile_photo">Profile Photo</span>
                         </li>
+                        <li class="list-group-item">
+                            <span class="btn profile-sub-page-link" sub-page-target="#sp_additional_information">Additional Information</span>
+                        </li>
                         <?php
                         if($_SESSION['loginUser'] == 'CT') {
                             ?>
@@ -67,6 +70,7 @@ $user_meta_data = get_user_meta($user_id);
                         <?php include('profile-sub-pages/physicians.php')?>
                         <?php include('profile-sub-pages/addresses.php')?>
                         <?php include('profile-sub-pages/profile_photo.php')?>
+                        <?php include('profile-sub-pages/additional_information.php')?>
                         <?php
                         if($_SESSION['loginUser'] == 'CT') {
                             include('profile-sub-pages/security_questions.php');

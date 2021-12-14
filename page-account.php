@@ -9,9 +9,15 @@ get_header();
         <div class="card mt-3">
             <div class="card-body">
                 <h2 class="card-title">Profile</h2>
-                <div class="text-end">
-                    <a class="btn btn-blue" href="<?php echo get_permalink(get_page_by_path('account/profile'))?>"><?php echo $_SESSION['loginUser'] == 'CT' ? "Edit Profile" : "View Profile" ?></a>
-                </div>
+                <?php
+                if($_SESSION['loginUser'] == 'CT') {
+                    ?>
+                    <div class="text-end">
+                        <a class="btn btn-blue" href="<?php echo get_permalink(get_page_by_path('account/profile'))?>">Edit Profile</a>
+                    </div>
+                <?php
+                }
+                ?>
                 <div class="erp-list mt-3">
                     <div class="erp-row">
                         <div class="erp-row-wrap">
@@ -29,22 +35,67 @@ get_header();
                             ?>
                             <img class="erp-row__img" src="<?php echo $img_url?>">
                             <div class="erp-row-info">
-                                <h3 class="erp__name"><?php echo getUserMetaData($user_meta_data, 'personal_identification', 'first_name').' '.getUserMetaData($user_meta_data, 'personal_identification', 'middle_name').' '.getUserMetaData($user_meta_data, 'personal_identification', 'last_name')?></h3>
                                 <div class="erp-info-row">
-                                    <span class="erp-info__title">Gender:</span>
-                                    <span class="erp-info__value"><?php echo getUserMetaData($user_meta_data, 'personal_identification', 'gender')?></span>
+                                    <span class="erp-info__title">Name:</span>
+                                    <span class="erp-info__value"><?php echo getUserMetaData($user_meta_data, 'personal_identification', 'first_name')?> <?php echo getUserMetaData($user_meta_data, 'personal_identification', 'last_name')?></span>
                                 </div>
                                 <div class="erp-info-row">
-                                    <span class="erp-info__title">Phone Number:</span>
+                                    <span class="erp-info__title">Home Phone:</span>
                                     <span class="erp-info__value"><?php echo getUserMetaData($user_meta_data, 'personal_identification', 'phone')?></span>
+                                </div>
+                                <div class="erp-info-row">
+                                    <span class="erp-info__title">ICE 1:</span>
+                                    <span class="erp-info__value"><?php echo getUserMetaData($user_meta_data, 'personal_identification', 'ice1')?></span>
+                                </div>
+                                <div class="erp-info-row">
+                                    <span class="erp-info__title">ICE 2:</span>
+                                    <span class="erp-info__value"><?php echo getUserMetaData($user_meta_data, 'personal_identification', 'ice2')?></span>
+                                </div>
+                                <div class="erp-info-row">
+                                    <span class="erp-info__title">Organ Donor:</span>
+                                    <span class="erp-info__value"><?php echo getUserMetaData($user_meta_data, 'personal_identification', 'organ_donor')?></span>
                                 </div>
                                 <div class="erp-info-row">
                                     <span class="erp-info__title">Ethnicity:</span>
                                     <span class="erp-info__value"><?php echo getUserMetaData($user_meta_data, 'personal_identification', 'ethnicity')?></span>
                                 </div>
                                 <div class="erp-info-row">
-                                    <span class="erp-info__title">Organ Donor:</span>
-                                    <span class="erp-info__value"><?php echo getUserMetaData($user_meta_data, 'personal_identification', 'organ_donor')?></span>
+                                    <span class="erp-info__title">Allergies:</span>
+                                    <span class="erp-info__value">
+                                    <?php
+                                        $list_count = (int)getUserMetaData($user_meta_data, 'allergies', 'list');
+                                        for($index = 0; $index < $list_count; $index ++) {
+                                            echo getUserMetaListData($user_meta_data, 'allergies', 'type', $index);
+                                            if($index < ($list_count - 1)) {
+                                                echo ", ";
+                                            }
+                                        }
+                                    ?>
+                                    </span>
+                                </div>
+                                <div class="erp-info-row">
+                                    <span class="erp-info__title">Medications Taking:</span>
+                                    <span class="erp-info__value"><?php echo getUserMetaData($user_meta_data, 'personal_identification', 'gender')?></span>
+                                </div>
+                                <div class="erp-info-row">
+                                    <span class="erp-info__title">Address:</span>
+                                    <span class="erp-info__value"><?php echo getUserMetaData($user_meta_data, 'addresses', 'line1')?> <?php echo getUserMetaData($user_meta_data, 'addresses', 'line2')?> <?php echo getUserMetaData($user_meta_data, 'addresses', 'line3')?> <?php echo getUserMetaData($user_meta_data, 'addresses', 'line4')?> <?php echo getUserMetaData($user_meta_data, 'addresses', 'city')?> <?php echo getUserMetaData($user_meta_data, 'addresses', 'country')?> <?php echo getUserMetaData($user_meta_data, 'addresses', 'pcode')?></span>
+                                </div>
+                                <div class="erp-info-row">
+                                    <span class="erp-info__title">Doctor:</span>
+                                    <span class="erp-info__value"><?php echo getUserMetaData($user_meta_data, 'additional_information', 'doctor')?></span>
+                                </div>
+                                <div class="erp-info-row">
+                                    <span class="erp-info__title">Hospital:</span>
+                                    <span class="erp-info__value"><?php echo getUserMetaData($user_meta_data, 'additional_information', 'hospital')?></span>
+                                </div>
+                                <div class="erp-info-row">
+                                    <span class="erp-info__title">Religion:</span>
+                                    <span class="erp-info__value"><?php echo getUserMetaData($user_meta_data, 'additional_information', 'religion')?></span>
+                                </div>
+                                <div class="erp-info-row">
+                                    <span class="erp-info__title">Additional Information:</span>
+                                    <span class="erp-info__value"><?php echo getUserMetaData($user_meta_data, 'additional_information', 'notes')?></span>
                                 </div>
                             </div>
                         </div>

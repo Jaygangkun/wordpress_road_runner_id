@@ -158,6 +158,10 @@ function existWristbandID($data) {
 	$users = get_users( array( 'role__in' => array( 'subscriber' ) ) );
 	// Array of WP_User objects.
 	foreach ( $users as $user ) {
+		if($user->ID == get_current_user_id()) {
+			continue;
+		}
+		
 		$wristbands = get_posts(array(
 			'post_type' => 'wristband',
 			'numberposts' => -1,
@@ -1007,6 +1011,18 @@ function register() {
 				$user->set_role('subscriber');
 			}
 
+			$questionsData = $_POST['questionsData'];
+			$list_count = count($questionsData);
+			for($index = 0; $index < $list_count; $index ++) {
+				// move data
+				update_user_meta($user_id, 'security_questions_list_'.$index.'_question', $questionsData[$index]['question']);
+				update_user_meta($user_id, 'security_questions_list_'.$index.'_answer', $questionsData[$index]['answer']);
+			}
+
+			if($list_count >= 0) {
+				update_user_meta($user_id, 'security_questions_list', $list_count);
+			}
+
 			$resp['success'] = true;
 		}
 	}
@@ -1178,7 +1194,7 @@ add_action('wp_ajax_nopriv_reset_user_password', 'resetUserPassword');
 
 function myroadid_change_cookie_logout( $expiration){
     
-    return 5 * 60;
+    return 500 * 60;
 }
  
 add_filter( 'auth_cookie_expiration','myroadid_change_cookie_logout', 10, 3 );

@@ -714,3 +714,7 @@ body {
 #wpadminbar {
   display: none;
 }
+
+.page-content {
+  padding: 50px;
+}
