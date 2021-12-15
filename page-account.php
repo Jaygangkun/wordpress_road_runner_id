@@ -75,7 +75,17 @@ get_header();
                                 </div>
                                 <div class="erp-info-row">
                                     <span class="erp-info__title">Medications Taking:</span>
-                                    <span class="erp-info__value"><?php echo getUserMetaData($user_meta_data, 'personal_identification', 'gender')?></span>
+                                    <span class="erp-info__value">
+                                    <?php
+                                        $list_count = (int)getUserMetaData($user_meta_data, 'current_medications', 'list');
+                                        for($index = 0; $index < $list_count; $index ++) {
+                                            echo getUserMetaListData($user_meta_data, 'current_medications', 'name', $index);
+                                            if($index < ($list_count - 1)) {
+                                                echo ", ";
+                                            }
+                                        }
+                                    ?>
+                                    </span>
                                 </div>
                                 <div class="erp-info-row">
                                     <span class="erp-info__title">Address:</span>
