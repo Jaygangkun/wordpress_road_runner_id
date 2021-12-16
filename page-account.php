@@ -17,6 +17,13 @@ get_header();
                     </div>
                 <?php
                 }
+                else {
+                    ?>
+                    <div class="text-end">
+                        <a class="btn btn-blue" href="<?php echo get_permalink(get_page_by_path('account/profile'))?>">Info</a>
+                    </div>
+                    <?php
+                }
                 ?>
                 <div class="erp-list mt-3">
                     <div class="erp-row">

@@ -718,3 +718,24 @@ body {
 .page-content {
   padding: 50px;
 }
+
+@media screen and (max-width: 576px) {
+  .erp-row-wrap {
+    display: block;
+  }
+
+  .erp-row__img {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 20px;
+  }
+
+  .page-header-nav-link {
+    margin: 0px 5px;
+    font-size: 14px;
+  }
+
+  .page-header-logo__img {
+    height: 100px;
+  }
+}
