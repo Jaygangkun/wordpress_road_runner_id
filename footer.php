@@ -5,7 +5,7 @@
 							<a class="text-white" href="<?php echo get_permalink(get_page_by_path('privacy-policy'))?>">Privacy Policy</a>
 						</div>
 					</div>
-					<p class="footer-copyright-text">©2021 ROAD RUNNER ID. All Rights Reserved.</p>
+					<p class="footer-copyright-text">©2025 BRECKmed LLC. All Rights Reserved.</p>
 			
 				</footer> <!-- end footer -->
 				

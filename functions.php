@@ -378,7 +378,7 @@ function responderLogin() {
 	$sn = isset($_POST['sn']) ? $_POST['sn'] : '';
 	$pin = isset($_POST['pin']) ? $_POST['pin'] : '';
 
-	$users = get_users( array( 'role__in' => array( 'subscriber' ) ) );
+	$users = get_users( array( 'role__in' => array( 'subscriber', 'administrator' ) ) );
 	$user_id = null;
 	// Array of WP_User objects.
 	foreach ( $users as $user ) {
@@ -424,10 +424,20 @@ add_action('wp_logout', 'cyb_end_session');
 // add_action('wp_login', 'cyb_end_session');
 
 function cyb_start_session() {
-    if( ! session_id() ) {
-        session_start();
-        // now you can load your library that use $_SESSION
-    }
+  if( ! session_id() ) {
+    session_start();
+    // now you can load your library that use $_SESSION
+  }
+
+  // Set session expiry
+  if ( isset( $_SESSION['LAST_ACTIVITY'] ) && ( time() - $_SESSION['LAST_ACTIVITY'] > 900 ) ) { // 900 seconds = 15 minutes
+    session_unset(); // Clear session data
+    session_destroy(); // Destroy session
+
+    wp_redirect(get_home_url());
+    return;
+  }
+  $_SESSION['LAST_ACTIVITY'] = time(); // Update last activity time
 }
 
 function cyb_end_session() {
@@ -455,8 +465,8 @@ function customerLogin(){
 		));
 
 		$to = $user_signon->user_email;
-		$subject = 'MYRRID Login';
-		$body = 'Your MyRRID Profile has been logged in to, if it was not you please deactivate your e-ID immediately.';
+		$subject = 'BRECKmed Login';
+		$body = 'Your BRECKmed Profile has been accessed, if this was not you please deactivate your ID immediately using this link.';
 		$headers = array('Content-Type: text/html; charset=UTF-8');
 		
 		wp_mail( $to, $subject, $body, $headers );

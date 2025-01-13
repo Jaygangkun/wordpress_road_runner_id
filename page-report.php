@@ -30,7 +30,7 @@ get_header();
                     </div>
                     <div class="mt-3">
                         <label for="" class="form-label">Date</label>
-                        <input type="text" id="date" class="form-control boostrap-datepicker" placeholder="">
+                        <input type="date" id="date" class="form-control boostrap-datepicker" placeholder="">
                     </div>
                     <div class="mt-3">
                         <button type="submit" class="btn btn-blue w-100" id="report_btn">Report</button>
@@ -42,11 +42,12 @@ get_header();
 </div>
 <script>
     jQuery(document).ready(function(){
-        jQuery(".boostrap-datepicker").datetimepicker({
-            format: 'yyyy-mm-dd hh:ii:ss',
-            autoclose: true,
-            // container: '#wristband_modal modal-body'
-        });
+        // jQuery(".boostrap-datepicker").datetimepicker({
+        //     format: 'yyyy-mm-dd hh:ii:ss',
+        //     timepicker: false,
+        //     autoclose: true,
+        //     // container: '#wristband_modal modal-body'
+        // });
 
         jQuery(document).on('click', '#report_btn', function() {
             jQuery('#report_alert_success').hide();

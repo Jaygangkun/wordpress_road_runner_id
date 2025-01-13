@@ -81,7 +81,15 @@ if(!is_user_logged_in()) {
 	<div class="page-content-container">
 		<div class="page-header">
 			<a class="page-header-logo" href="<?php echo home_url(); ?>">
-				<img class="page-header-logo__img" src="<?php echo get_template_directory_uri()?>/library/images/rrid-logo.jpg" alt="Logo Image">
+        <?php
+        $logo_img = get_field('logo', 'option');
+        
+        if ($logo_img) {
+          ?>
+          <img class="page-header-logo__img" src="<?php echo $logo_img['url']?>" alt="Logo Image">
+          <?php
+        }
+        ?>
 			</a>
 			<div class="page-header-nav">
 				<a class="page-header-nav-link" href="<?php echo get_home_url()?>">Home</a>
@@ -92,7 +100,7 @@ if(!is_user_logged_in()) {
 					<?php
 				}
 				?>
-				<a class="page-header-nav-link" href="https://www.roadrunnerid.com/">Purchase</a>
+				<a class="page-header-nav-link" href="https://breckid.com/">Purchase</a>
 				<?php
 				if (is_user_logged_in() && $_SESSION['loginUser'] == 'CT') {
 					?>
